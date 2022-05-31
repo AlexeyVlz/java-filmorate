@@ -19,7 +19,13 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController {
 
-    private Map<Integer, Film> films = new HashMap<>();
+    private final Map<Integer, Film> films;
+    int id;
+
+    public FilmController() {
+        this.films = new HashMap<>();
+        this.id = 0;
+    }
 
     public Map<Integer, Film> getFilms() {
         return films;
@@ -42,6 +48,7 @@ public class FilmController {
             if(film.getDuration().toSeconds() <= 0){
                 throw new ValidationException("продолжительность фильма должна быть положительной");
             }
+            film.setId(++id);
             films.put(film.getId(), film);
             log.info("Новый фильм успешно добавлен");
             return film;

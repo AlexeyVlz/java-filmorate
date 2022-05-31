@@ -21,7 +21,7 @@ public class FilmControllerTest {
 
     @Test
     public void addTest() {
-        Film film = ObjectsFilmControllerTest.correctFilm();
+        Film film = ObjectsFilmControllerTest.addCorrectFilm();
         try {
             filmController.add(film);
         } catch (ValidationException e) {
@@ -29,28 +29,28 @@ public class FilmControllerTest {
         }
         Assertions.assertEquals(film, filmController.getFilms().get(1));
 
-        Film emptyName = ObjectsFilmControllerTest.emptyNameFilm();
+        Film emptyName = ObjectsFilmControllerTest.addEmptyNameFilm();
         try {
             filmController.add(emptyName);
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "название не может быть пустым");
         }
 
-        Film tooLongDescription = ObjectsFilmControllerTest.tooLongDescription();
+        Film tooLongDescription = ObjectsFilmControllerTest.addTooLongDescription();
         try {
             filmController.add(tooLongDescription);
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "максимальная длина описания — 200 символов");
         }
 
-        Film errorDateRelease = ObjectsFilmControllerTest.errorDateRelease();
+        Film errorDateRelease = ObjectsFilmControllerTest.addErrorDateRelease();
         try {
             filmController.add(errorDateRelease);
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "дата релиза должна быть не раньше 28 декабря 1895 года");
         }
 
-        Film errorDuration = ObjectsFilmControllerTest.errorDuration();
+        Film errorDuration = ObjectsFilmControllerTest.addErrorDuration();
         try {
             filmController.add(errorDuration);
         } catch (ValidationException e) {
@@ -60,13 +60,15 @@ public class FilmControllerTest {
 
     @Test
     public void updateTest() {
-        Film film = ObjectsFilmControllerTest.correctFilm();
+        Film film = ObjectsFilmControllerTest.addCorrectFilm();
         try {
             filmController.add(film);
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
+
         Film uncorrectIdByUpdate = ObjectsFilmControllerTest.uncorrectIdByUpdate();
+        uncorrectIdByUpdate.setId(1);
         try {
             filmController.update(uncorrectIdByUpdate);
         } catch (ValidationException e) {
@@ -81,28 +83,32 @@ public class FilmControllerTest {
         }
         Assertions.assertEquals(correctIdByUpdate, filmController.getFilms().get(1));
 
-        Film emptyName = ObjectsFilmControllerTest.emptyNameFilm();
+        Film emptyName = ObjectsFilmControllerTest.addEmptyNameFilm();
+        emptyName.setId(1);
         try {
             filmController.update(emptyName);
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "название не может быть пустым");
         }
 
-        Film tooLongDescription = ObjectsFilmControllerTest.tooLongDescription();
+        Film tooLongDescription = ObjectsFilmControllerTest.addTooLongDescription();
+        tooLongDescription.setId(1);
         try {
             filmController.update(tooLongDescription);
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "максимальная длина описания — 200 символов");
         }
 
-        Film errorDateRelease = ObjectsFilmControllerTest.errorDateRelease();
+        Film errorDateRelease = ObjectsFilmControllerTest.addErrorDateRelease();
+        errorDateRelease.setId(1);
         try {
             filmController.update(errorDateRelease);
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "дата релиза должна быть не раньше 28 декабря 1895 года");
         }
 
-        Film errorDuration = ObjectsFilmControllerTest.errorDuration();
+        Film errorDuration = ObjectsFilmControllerTest.addErrorDuration();
+        errorDuration.setId(1);
         try {
             filmController.update(errorDuration);
         } catch (ValidationException e) {
@@ -114,11 +120,15 @@ public class FilmControllerTest {
     public void getFilmsTest() {
         List<Film> films = new ArrayList<>();
         Assertions.assertEquals(films, filmController.getAllFilms());
-        films.add(ObjectsFilmControllerTest.correctFilm());
-        films.add(ObjectsFilmControllerTest.correctFilm2());
+        Film film1 = ObjectsFilmControllerTest.addCorrectFilm();
+        film1.setId(1);
+        films.add(film1);
+        Film film2 = ObjectsFilmControllerTest.addCorrectFilm2();
+        film2.setId(2);
+        films.add(film2);
         try {
-            filmController.add(ObjectsFilmControllerTest.correctFilm());
-            filmController.add(ObjectsFilmControllerTest.correctFilm2());
+            filmController.add(ObjectsFilmControllerTest.addCorrectFilm());
+            filmController.add(ObjectsFilmControllerTest.addCorrectFilm2());
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
