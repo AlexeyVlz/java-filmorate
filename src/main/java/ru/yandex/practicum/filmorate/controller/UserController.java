@@ -18,8 +18,13 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users;
+    private int id;
 
+    public UserController() {
+        this.users = new HashMap<>();
+        this.id = 0;
+    }
 
     public Map<Integer, User> getUsers() {
         return users;
@@ -41,6 +46,7 @@ public class UserController {
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
+            user.setId(++id);
             users.put(user.getId(), user);
             log.info("Новый пользователь успешно добавлен");
             return user;
@@ -57,7 +63,7 @@ public class UserController {
             if (!users.containsKey(user.getId())){
                 throw new NullPointerException("Пользователь не обнаружен");
             }
-            if(user.getEmail().length() < 1 || user.getEmail().equals("") || user.getEmail().contains("@")) {
+            if(user.getEmail().length() < 1 || user.getEmail().equals("") || !user.getEmail().contains("@")) {
                 throw new ValidationException("Введите корректный адрес электронной почты");
             }
             if(user.getLogin().length() < 1 || user.getLogin().contains(" ")){
@@ -74,7 +80,6 @@ public class UserController {
             return user;
         } catch (ValidationException | NullPointerException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
-            System.out.println(exception.getMessage());
             throw new ValidationException(exception.getMessage());
         }
     }

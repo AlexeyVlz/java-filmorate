@@ -10,7 +10,6 @@ public class ObjectsUserControllerTest {
 
     public static User correctUser() {
         return User.builder()
-                .id(1)
                 .email("777@yandex.ru")
                 .login("Alexey777")
                 .name("Alexey")
@@ -18,9 +17,17 @@ public class ObjectsUserControllerTest {
                 .build();
     }
 
+    public static User correctUser2() {
+        return User.builder()
+                .email("333@yandex.ru")
+                .login("Roman333")
+                .name("Roman")
+                .birthday(LocalDate.of(2000, 1, 1))
+                .build();
+    }
+
     public static User uncorrectMail() {
         return User.builder()
-                .id(1)
                 .email("777yandex.ru")
                 .login("Alexey777")
                 .name("Alexey")
@@ -30,7 +37,6 @@ public class ObjectsUserControllerTest {
 
     public static User uncorrectMail2() {
         return User.builder()
-                .id(1)
                 .email("")
                 .login("Alexey777")
                 .name("Alexey")
@@ -40,7 +46,6 @@ public class ObjectsUserControllerTest {
 
     public static User uncorrectLogin() {
         return User.builder()
-                .id(1)
                 .email("777@yandex.ru")
                 .login("Alexey 777")
                 .name("Alexey")
@@ -50,7 +55,6 @@ public class ObjectsUserControllerTest {
 
     public static User uncorrectLogin2() {
         return User.builder()
-                .id(1)
                 .email("777@yandex.ru")
                 .login("")
                 .name("Alexey")
@@ -60,7 +64,6 @@ public class ObjectsUserControllerTest {
 
     public static User uncorrectBirthdayDate() {
         return User.builder()
-                .id(1)
                 .email("777@yandex.ru")
                 .login("Alexey777")
                 .name("Alexey")
@@ -70,7 +73,6 @@ public class ObjectsUserControllerTest {
 
     public static User emptyName() {
         return User.builder()
-                .id(2)
                 .email("777@yandex.ru")
                 .login("Alexey777")
                 .name("")

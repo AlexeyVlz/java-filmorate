@@ -20,7 +20,7 @@ import java.util.Map;
 public class FilmController {
 
     private final Map<Integer, Film> films;
-    int id;
+    private int id;
 
     public FilmController() {
         this.films = new HashMap<>();
