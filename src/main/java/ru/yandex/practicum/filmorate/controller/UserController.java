@@ -8,7 +8,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -16,13 +18,18 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    Map<Integer, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
+
+
+    public Map<Integer, User> getUsers() {
+        return users;
+    }
 
     @PutMapping ("/create")
-    public User create(@RequestBody User user, HttpServletRequest request) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: '{} {}'", request.getMethod(), request.getRequestURI());
+    public User create(@RequestBody User user) throws ValidationException {
+        log.info("Получен запрос к эндпоинту: PUT: /users/create");
         try{
-            if(user.getEmail().length() < 1 || user.getEmail().equals("") || user.getEmail().contains("@")) {
+            if(user.getEmail().length() < 1 || user.getEmail().equals("") || !user.getEmail().contains("@")) {
                 throw new ValidationException("Введите корректный адрес электронной почты");
             }
             if(user.getLogin().length() < 1 || user.getLogin().contains(" ")){
@@ -44,8 +51,8 @@ public class UserController {
     }
 
     @PutMapping ("/update")
-    public User update(@RequestBody User user, HttpServletRequest request) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: '{} {}'", request.getMethod(), request.getRequestURI());
+    public User update(@RequestBody User user) throws ValidationException {
+        log.info("Получен запрос к эндпоинту: PUT: /users/update");
         try{
             if (!users.containsKey(user.getId())){
                 throw new NullPointerException("Пользователь не обнаружен");
@@ -73,8 +80,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public Map<Integer, User> getUsers() {
-        return users;
+    public List<User> getAllUsers() {
+        return new ArrayList<>(users.values());
     }
 
 }

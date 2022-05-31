@@ -21,9 +21,13 @@ public class FilmController {
 
     private Map<Integer, Film> films = new HashMap<>();
 
+    public Map<Integer, Film> getFilms() {
+        return films;
+    }
+
     @PutMapping("/add")
     public Film add(@RequestBody Film film) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: GET: /films/add");
+        log.info("Получен запрос к эндпоинту: PUT: /films/add");
         try {
             if(film.getName().length() < 1 || film.getName().equals("")){
                 throw new ValidationException("название не может быть пустым");
@@ -77,7 +81,7 @@ public class FilmController {
     }
 
     @GetMapping ("/films")
-    public List<Film> getFilms() {
+    public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
 }

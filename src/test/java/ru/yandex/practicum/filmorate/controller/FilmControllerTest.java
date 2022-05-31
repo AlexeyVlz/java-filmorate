@@ -5,13 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.objectsForTests.ObjectsFilmControllerTest;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +113,7 @@ public class FilmControllerTest {
     @Test
     public void getFilmsTest() {
         List<Film> films = new ArrayList<>();
-        Assertions.assertEquals(films, filmController.getFilms());
+        Assertions.assertEquals(films, filmController.getAllFilms());
         films.add(ObjectsFilmControllerTest.correctFilm());
         films.add(ObjectsFilmControllerTest.correctFilm2());
         try {
@@ -127,6 +122,6 @@ public class FilmControllerTest {
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
-        Assertions.assertEquals(films, filmController.getFilms());
+        Assertions.assertEquals(films, filmController.getAllFilms());
     }
 }
