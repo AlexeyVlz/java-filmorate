@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody @NonNull User user) throws ValidationException {
+    public User create(@RequestBody @Valid User user) throws ValidationException {
         log.info("Получен запрос к эндпоинту: POST: /users");
         try{
             if(user.getEmail().length() < 1 || user.getEmail().equals("") || !user.getEmail().contains("@")) {
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody @NonNull User user) throws ValidationException {
+    public User update(@RequestBody @Valid User user) throws ValidationException {
         log.info("Получен запрос к эндпоинту: PUT: /users");
         try{
             if (!users.containsKey(user.getId())){

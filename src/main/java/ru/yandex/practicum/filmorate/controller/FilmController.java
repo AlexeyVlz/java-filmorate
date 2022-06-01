@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film add(@RequestBody @NonNull Film film) throws ValidationException {
+    public Film add(@RequestBody @Valid Film film) throws ValidationException {
         log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
             if(film.getName().length() < 1 || film.getName().equals("")){
@@ -60,7 +61,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody @NonNull Film film) throws ValidationException {
+    public Film update(@RequestBody @Valid Film film) throws ValidationException {
         log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
             if(!films.containsKey(film.getId())){
