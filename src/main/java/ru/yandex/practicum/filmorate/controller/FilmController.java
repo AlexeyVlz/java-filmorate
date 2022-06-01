@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import com.sun.jdi.connect.VMStartException;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -31,9 +32,9 @@ public class FilmController {
         return films;
     }
 
-    @PutMapping("/add")
-    public Film add(@RequestBody Film film) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: PUT: /films/add");
+    @PostMapping
+    public Film add(@RequestBody @NonNull Film film) throws ValidationException {
+        log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
             if(film.getName().length() < 1 || film.getName().equals("")){
                 throw new ValidationException("название не может быть пустым");
@@ -58,9 +59,9 @@ public class FilmController {
         }
     }
 
-    @PutMapping ("/update")
-    public Film update(@RequestBody Film film) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: PUT: /films/update");
+    @PutMapping
+    public Film update(@RequestBody @NonNull Film film) throws ValidationException {
+        log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
             if(!films.containsKey(film.getId())){
                 throw new NullPointerException("Такой фильм ранее не включался в рейтинг");
@@ -87,8 +88,10 @@ public class FilmController {
         }
     }
 
-    @GetMapping ("/films")
+    @GetMapping
     public List<Film> getAllFilms() {
+        log.info("Получен запрос к эндпоинту: GET: /films");
+        log.info("Cписок фильмов отправлен");
         return new ArrayList<>(films.values());
     }
 }

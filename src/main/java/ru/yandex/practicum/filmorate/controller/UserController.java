@@ -1,11 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,9 +32,9 @@ public class UserController {
         return users;
     }
 
-    @PutMapping ("/create")
-    public User create(@RequestBody User user) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: PUT: /users/create");
+    @PostMapping
+    public User create(@RequestBody @NonNull User user) throws ValidationException {
+        log.info("Получен запрос к эндпоинту: POST: /users");
         try{
             if(user.getEmail().length() < 1 || user.getEmail().equals("") || !user.getEmail().contains("@")) {
                 throw new ValidationException("Введите корректный адрес электронной почты");
@@ -56,9 +58,9 @@ public class UserController {
         }
     }
 
-    @PutMapping ("/update")
-    public User update(@RequestBody User user) throws ValidationException {
-        log.info("Получен запрос к эндпоинту: PUT: /users/update");
+    @PutMapping
+    public User update(@RequestBody @NonNull User user) throws ValidationException {
+        log.info("Получен запрос к эндпоинту: PUT: /users");
         try{
             if (!users.containsKey(user.getId())){
                 throw new NullPointerException("Пользователь не обнаружен");
@@ -76,6 +78,7 @@ public class UserController {
                 user.setName(user.getLogin());
             }
             users.put(user.getId(), user);
+
             log.info("Пользователь успешно обновлён");
             return user;
         } catch (ValidationException | NullPointerException exception) {
@@ -84,8 +87,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<User> getAllUsers() {
+        log.info("Получен запрос к эндпоинту: GET: /users");
+        log.info("Список пользователей отправлен");
         return new ArrayList<>(users.values());
     }
 
