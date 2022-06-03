@@ -7,7 +7,8 @@ import lombok.NonNull;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import javax.validation.constraints.Pattern;
 
 @Data
 @Builder
@@ -16,7 +17,7 @@ public class User {
     private  int id;
     @NonNull @Email
     private  String email;
-    @NonNull @NotBlank
+    @NonNull @NotBlank /*@Pattern(regexp = "^/S*$")*/
     private  String login;
     private  String name;
     @NonNull

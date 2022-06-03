@@ -34,18 +34,10 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody @Valid User user) throws ValidationException {
+    public User create(@RequestBody @Valid User user) {
         log.info("Получен запрос к эндпоинту: POST: /users");
         try{
-            if(user.getEmail().length() < 1 || user.getEmail().equals("") || !user.getEmail().contains("@")) {
-                throw new ValidationException("Введите корректный адрес электронной почты");
-            }
-            if(user.getLogin().length() < 1 || user.getLogin().contains(" ")){
-                throw new ValidationException("Введите корректный логин (логин не может содержать пробелы)");
-            }
-            if(user.getBirthday().isAfter(LocalDate.now())) {
-                throw new ValidationException("Дата рождения не может быть позже текущего времени");
-            }
+            Check.checkUser(user);
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
@@ -60,21 +52,13 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody @Valid User user) throws ValidationException {
+    public User update(@RequestBody @Valid User user) {
         log.info("Получен запрос к эндпоинту: PUT: /users");
         try{
             if (!users.containsKey(user.getId())){
                 throw new NullPointerException("Пользователь не обнаружен");
             }
-            if(user.getEmail().length() < 1 || user.getEmail().equals("") || !user.getEmail().contains("@")) {
-                throw new ValidationException("Введите корректный адрес электронной почты");
-            }
-            if(user.getLogin().length() < 1 || user.getLogin().contains(" ")){
-                throw new ValidationException("Введите корректный логин (логин не может содержать пробелы)");
-            }
-            if(user.getBirthday().isAfter(LocalDate.now())) {
-                throw new ValidationException("Дата рождения не может быть позже текущего времени");
-            }
+            Check.checkUser(user);
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
@@ -90,8 +74,6 @@ public class UserController {
 
     @GetMapping
     public List<User> getAllUsers() {
-        log.info("Получен запрос к эндпоинту: GET: /users");
-        log.info("Список пользователей отправлен");
         return new ArrayList<>(users.values());
     }
 

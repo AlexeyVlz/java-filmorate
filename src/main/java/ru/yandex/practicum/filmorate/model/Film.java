@@ -8,13 +8,16 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.validation.*;
+import javax.validation.constraints.Size;
+
 @Data
 public class Film {
 
     private int id;
     @NonNull @NotBlank
     private final String name;
-    @NonNull @NotBlank
+    @NonNull @NotBlank @Size(min = 1, max = 200)
     private final String description;
     @NonNull
     private final LocalDate releaseDate;

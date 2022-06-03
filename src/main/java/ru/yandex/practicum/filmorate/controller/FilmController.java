@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @Slf4j
 @RestController
 @RequestMapping("/films")
@@ -34,22 +35,10 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film add(@RequestBody @Valid Film film) throws ValidationException {
+    public Film add(@RequestBody @Valid Film film)  {
         log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
-            if(film.getName().length() < 1 || film.getName().equals("")){
-                throw new ValidationException("название не может быть пустым");
-            }
-            if(film.getDescription().length() > 200){
-                throw new ValidationException("максимальная длина описания — 200 символов");
-            }
-            if(film.getReleaseDate().isBefore(LocalDate.of
-                    (1895, 12, 28))){
-                throw new ValidationException("дата релиза должна быть не раньше 28 декабря 1895 года");
-            }
-            if(film.getDuration() <= 0){
-                throw new ValidationException("продолжительность фильма должна быть положительной");
-            }
+            Check.checkFilm(film);
             film.setId(++id);
             films.put(film.getId(), film);
             log.info("Новый фильм успешно добавлен");
@@ -61,25 +50,13 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody @Valid Film film) throws ValidationException {
+    public Film update(@RequestBody @Valid Film film)  {
         log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
             if(!films.containsKey(film.getId())){
                 throw new NullPointerException("Такой фильм ранее не включался в рейтинг");
             }
-            if(film.getName().length() < 1 || film.getName().equals("")){
-                throw new ValidationException("название не может быть пустым");
-            }
-            if(film.getDescription().length() > 200){
-                throw new ValidationException("максимальная длина описания — 200 символов");
-            }
-            if(film.getReleaseDate().isBefore(LocalDate.of
-                    (1895, 12, 28))){
-                throw new ValidationException("дата релиза должна быть не раньше 28 декабря 1895 года");
-            }
-            if(film.getDuration() <= 0){
-                throw new ValidationException("продолжительность фильма должна быть положительной");
-            }
+            Check.checkFilm(film);
             films.put(film.getId(), film);
             log.info("Фильм успешно обновлен");
             return film;
@@ -91,8 +68,6 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getAllFilms() {
-        log.info("Получен запрос к эндпоинту: GET: /films");
-        log.info("Cписок фильмов отправлен");
         return new ArrayList<>(films.values());
     }
 }
