@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.validation.*;
 import javax.validation.constraints.Size;
@@ -23,4 +24,6 @@ public class Film {
     private final LocalDate releaseDate;
     @NonNull
     private final int duration;
+    @NonNull
+    private final Set<Integer> likes;
 }

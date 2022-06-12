@@ -2,9 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,16 +25,15 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    private final Map<Integer, User> users;
-    private int id;
+    private final UserService userService;
 
-    public UserController() {
-        this.users = new HashMap<>();
-        this.id = 0;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    public Map<Integer, User> getUsers() {
-        return users;
+    public UserService getUserService() {
+        return userService;
     }
 
     @PostMapping
@@ -41,8 +44,7 @@ public class UserController {
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
-            user.setId(++id);
-            users.put(user.getId(), user);
+            user = userService.create(user);
             log.info("Новый пользователь успешно добавлен");
             return user;
         } catch (ValidationException exception) {
@@ -55,15 +57,11 @@ public class UserController {
     public User update(@RequestBody @Valid User user) {
         log.info("Получен запрос к эндпоинту: PUT: /users");
         try{
-            if (!users.containsKey(user.getId())){
-                throw new NullPointerException("Пользователь не обнаружен");
-            }
             Check.checkUser(user);
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
-            users.put(user.getId(), user);
-
+            user = userService.update(user);
             log.info("Пользователь успешно обновлён");
             return user;
         } catch (ValidationException | NullPointerException exception) {
@@ -74,7 +72,7 @@ public class UserController {
 
     @GetMapping
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return userService.getAllUsers();
     }
 
 }
