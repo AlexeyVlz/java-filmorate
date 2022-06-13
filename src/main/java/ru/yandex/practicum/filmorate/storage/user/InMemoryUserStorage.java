@@ -3,10 +3,7 @@ package ru.yandex.practicum.filmorate.storage.user;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class InMemoryUserStorage implements UserStorage{
@@ -28,6 +25,7 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     public User create(User user){
+        user = user.toBuilder().friendsList(new TreeSet<>()).build();
         user.setId(++id);
         users.put(user.getId(), user);
         return user;

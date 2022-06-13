@@ -13,7 +13,7 @@ import java.util.TreeSet;
 import javax.validation.constraints.Pattern;
 
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class User {
 
     private  int id;

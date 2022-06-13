@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class UserService {
@@ -24,7 +25,7 @@ public class UserService {
         return userStorage;
     }
 
-    public User addNewFriend(Integer myId, Integer newFriendId) throws NullPointerException{
+    public User addNewFriend(Integer myId, Integer newFriendId) {
         User myAccount = getUserById(myId);
         myAccount.getFriendsList().add(newFriendId);
         userStorage.update(myAccount);
@@ -34,7 +35,7 @@ public class UserService {
         return myAccount;
     }
 
-    public User deletingFriend(Integer myId, Integer newFriendId) throws NullPointerException {
+    public User deletingFriend(Integer myId, Integer newFriendId) {
         User myAccount = getUserById(myId);
         myAccount.getFriendsList().remove(newFriendId);
         userStorage.update(myAccount);
@@ -44,7 +45,7 @@ public class UserService {
         return myAccount;
     }
 
-    public List<Integer> mutualFriendsList(Integer myId, Integer otherId) throws NullPointerException {
+    public List<Integer> mutualFriendsList(Integer myId, Integer otherId) {
         User user = getUserById(myId);
         User userFriend = getUserById(otherId);
         List<Integer> firstList;
@@ -78,10 +79,16 @@ public class UserService {
         return userStorage.getAllUsers();
     }
 
+    public List<Integer> getUserFriends(Integer id) {
+        return new ArrayList<>(getUserById(id).getFriendsList());
+    }
+
     public User getUserById(Integer id) {
         if(!((InMemoryUserStorage) userStorage).getUsers().containsKey(id)){
             throw new NullPointerException("Пользователь не обнаружен");
         }
         return ((InMemoryUserStorage) userStorage).getUsers().get(id);
     }
+
+
 }

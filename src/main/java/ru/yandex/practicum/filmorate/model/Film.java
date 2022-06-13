@@ -24,6 +24,6 @@ public class Film {
     private final LocalDate releaseDate;
     @NonNull
     private final int duration;
-    @NonNull
+
     private final Set<Integer> likes;
 }
