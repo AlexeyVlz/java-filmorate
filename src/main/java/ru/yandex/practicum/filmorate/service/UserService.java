@@ -24,27 +24,29 @@ public class UserService {
         return userStorage;
     }
 
-    public void addNewFriend(Integer myId, Integer newFriendId) throws NullPointerException{
-        User myAccount = ((InMemoryUserStorage) userStorage).getUsers().get(myId);
+    public User addNewFriend(Integer myId, Integer newFriendId) throws NullPointerException{
+        User myAccount = getUserById(myId);
         myAccount.getFriendsList().add(newFriendId);
         userStorage.update(myAccount);
-        User newFriendAccount = ((InMemoryUserStorage) userStorage).getUsers().get(newFriendId);
+        User newFriendAccount = getUserById(newFriendId);
         newFriendAccount.getFriendsList().add(myId);
         userStorage.update(newFriendAccount);
+        return myAccount;
     }
 
-    public void deletingFriend(Integer myId, Integer newFriendId) throws NullPointerException {
-        User myAccount = ((InMemoryUserStorage) userStorage).getUsers().get(myId);
+    public User deletingFriend(Integer myId, Integer newFriendId) throws NullPointerException {
+        User myAccount = getUserById(myId);
         myAccount.getFriendsList().remove(newFriendId);
         userStorage.update(myAccount);
-        User newFriendAccount = ((InMemoryUserStorage) userStorage).getUsers().get(newFriendId);
+        User newFriendAccount = getUserById(newFriendId);
         newFriendAccount.getFriendsList().remove(myId);
         userStorage.update(newFriendAccount);
+        return myAccount;
     }
 
-    public List<Integer> mutualFriendsList(Integer myId, Integer newFriendId) throws NullPointerException {
-        User user = ((InMemoryUserStorage) userStorage).getUsers().get(myId);
-        User userFriend = ((InMemoryUserStorage) userStorage).getUsers().get(newFriendId);
+    public List<Integer> mutualFriendsList(Integer myId, Integer otherId) throws NullPointerException {
+        User user = getUserById(myId);
+        User userFriend = getUserById(otherId);
         List<Integer> firstList;
         Set<Integer> secondList;
         if(userFriend.getFriendsList().size() <= user.getFriendsList().size()){
@@ -74,5 +76,12 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userStorage.getAllUsers();
+    }
+
+    public User getUserById(Integer id) {
+        if(!((InMemoryUserStorage) userStorage).getUsers().containsKey(id)){
+            throw new NullPointerException("Пользователь не обнаружен");
+        }
+        return ((InMemoryUserStorage) userStorage).getUsers().get(id);
     }
 }

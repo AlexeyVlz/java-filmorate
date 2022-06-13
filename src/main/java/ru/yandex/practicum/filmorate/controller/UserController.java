@@ -50,6 +50,9 @@ public class UserController {
         } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
         }
     }
 
@@ -64,15 +67,62 @@ public class UserController {
             user = userService.update(user);
             log.info("Пользователь успешно обновлён");
             return user;
-        } catch (ValidationException | NullPointerException exception) {
+        } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
         }
     }
 
     @GetMapping
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping ("/{id}")
+    public  User getUserById (@PathVariable Integer id){
+        log.info("Получен запрос к эндпоинту: GET: /users/{id}");
+        try {
+            return userService.getUserById(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @PutMapping ("/{id}/friends/{friendId}")
+    public User addNewFriend (@PathVariable Integer id, Integer friendId) {
+        log.info("Получен запрос к эндпоинту: PUT: /users/{id}/friends/{friendId}");
+        try{
+            return userService.addNewFriend(id, friendId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @DeleteMapping ("{id}/friends/{friendId}")
+    public User deletingFriend (@PathVariable Integer id, Integer friendId){
+        log.info("Получен запрос к эндпоинту: DELETE: /users/{id}/friends/{friendId}");
+        try{
+            return userService.deletingFriend(id, friendId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @GetMapping ("{id}/friends/common/{otherId}")
+    public List<Integer> mutualFriendsList (@PathVariable Integer id, @PathVariable Integer otherId) {
+        log.info("Получен запрос к эндпоинту: GET: /users/{id}/friends/common/{otherId}");
+        try{
+            return userService.mutualFriendsList(id, otherId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
     }
 
 }

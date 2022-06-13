@@ -39,7 +39,7 @@ public class FilmController {
 
     @PostMapping
     public Film add(@RequestBody @Valid Film film)  {
-        log.info("Получен запрос к эндпоинту: PUT: /films");
+        log.info("Получен запрос к эндпоинту: POST: /films");
         try {
             Check.checkFilm(film);
             film = filmService.add(film);
@@ -68,5 +68,47 @@ public class FilmController {
     @GetMapping
     public List<Film> getAllFilms() {
         return filmService.getAllFilms();
+    }
+
+    @GetMapping ("/{id}")
+    public Film getFilmById (@PathVariable("id") Integer id) {
+        log.info("Получен запрос к эндпоинту: GET: /films/{id}");
+        try {
+            return filmService.getFilmById(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+
+    }
+
+    @PutMapping ("/{id}/like/{userId}")
+    public Film addLike (@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
+        log.info("Получен запрос к эндпоинту: PUT: /films/{id}/like/{userId}");
+        try {
+            return filmService.addLike(id, userId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @DeleteMapping ("/{id}/like/{userId}")
+    public Film removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        log.info("Получен запрос к эндпоинту: DELETE: /films/{id}/like/{userId}");
+        try {
+            return filmService.removeLike(id, userId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @GetMapping ("/popular?count={count}")
+    public List<Film> mostPopularFilms (@RequestParam(defaultValue = "10", required = false) Integer count) {
+        if(count <= 0){
+            throw new ValidationException("Количество фильмов должно быть больше нуля");
+        }
+        return filmService.mostPopularFilms(count);
     }
 }

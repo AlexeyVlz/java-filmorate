@@ -42,7 +42,7 @@ public class FilmService {
         return filmStorage.getAllFilms();
     }
 
-    public void addLike(Integer filmId, Integer userId) {
+    public Film addLike(Integer filmId, Integer userId) {
         if(!((InMemoryUserStorage)userStorage).getUsers().containsKey(userId)){
             throw new NullPointerException("Пользователь не найден");
         }
@@ -52,9 +52,10 @@ public class FilmService {
         Film film = ((InMemoryFilmStorage) filmStorage).getFilms().get(filmId);
         film.getLikes().add(userId);
         filmStorage.update(film);
+        return film;
     }
 
-    public void removeLike(Integer filmId, Integer userId) {
+    public Film removeLike(Integer filmId, Integer userId) {
         if(!((InMemoryUserStorage)userStorage).getUsers().containsKey(userId)){
             throw new NullPointerException("Пользователь не найден");
         }
@@ -64,15 +65,26 @@ public class FilmService {
         Film film = ((InMemoryFilmStorage) filmStorage).getFilms().get(filmId);
         film.getLikes().remove(userId);
         filmStorage.update(film);
+        return film;
     }
 
-    public List<Film> mostPopularFilms() throws NullPointerException{
+    public List<Film> mostPopularFilms(Integer count) throws NullPointerException{
         TreeSet<Film> mostPopularFilms = new TreeSet<>((f1, f2) ->  f2.getLikes().size() - f1.getLikes().size());
         mostPopularFilms.addAll(filmStorage.getAllFilms());
         List<Film> tenMostPopularFilms = new ArrayList<>(mostPopularFilms);
-        if(tenMostPopularFilms.size() > 10){
-            tenMostPopularFilms = tenMostPopularFilms.subList(0, 9);
+        if(tenMostPopularFilms.size() < count){
+            tenMostPopularFilms = tenMostPopularFilms.subList(0, (tenMostPopularFilms.size() - 1));
+        } else {
+            tenMostPopularFilms = tenMostPopularFilms.subList(0, (count - 1));
         }
         return  tenMostPopularFilms;
+    }
+
+    public Film getFilmById(Integer id) {
+        try {
+            return ((InMemoryFilmStorage) filmStorage).getFilms().get(id);
+        } catch (NullPointerException exception) {
+            throw new NullPointerException("Фильм не найден");
+        }
     }
 }
