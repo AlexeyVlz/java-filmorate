@@ -95,9 +95,9 @@ public class UserController {
     @PutMapping ("/{id}/friends/{friendId}")
     public User addNewFriend (@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Получен запрос к эндпоинту: PUT: /users/{id}/friends/{friendId}");
-        if(id <= 0 || friendId <= 0){
-            throw new ValidationException("Указан некорректный id");
-        }
+        /*if(id <= 0 || friendId <= 0){
+            throw new ValidationException("id Должен быть больше 0");
+        }*/
         try{
             return userService.addNewFriend(id, friendId);
         } catch (NullPointerException exception){
@@ -118,7 +118,7 @@ public class UserController {
     }
 
     @GetMapping ("{id}/friends/common/{otherId}")
-    public List<Integer> mutualFriendsList (@PathVariable Integer id, @PathVariable Integer otherId) {
+    public List<User> mutualFriendsList (@PathVariable Integer id, @PathVariable Integer otherId) {
         log.info("Получен запрос к эндпоинту: GET: /users/{id}/friends/common/{otherId}");
         try{
             return userService.mutualFriendsList(id, otherId);
@@ -129,7 +129,7 @@ public class UserController {
     }
 
     @GetMapping ("{id}/friends")
-    public List<Integer> getUserFriends (@PathVariable Integer id) {
+    public List<User> getUserFriends (@PathVariable Integer id) {
         log.info("Получен запрос к эндпоинту: GET: /users/{id}/friends");
         try{
             return userService.getUserFriends(id);

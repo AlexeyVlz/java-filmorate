@@ -3,10 +3,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage{
@@ -28,6 +25,9 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     public Film add(Film film){
+        if(film.getLikes() == null) {
+            film = film.toBuilder().likes(new TreeSet<>()).build();
+        }
         film.setId(++id);
         films.put(film.getId(), film);
         return film;
@@ -36,6 +36,9 @@ public class InMemoryFilmStorage implements FilmStorage{
     public Film update(Film film){
         if(!films.containsKey(film.getId())){
             throw new NullPointerException("Такой фильм ранее не включался в рейтинг");
+        }
+        if(film.getLikes() == null) {
+            film = film.toBuilder().likes(new TreeSet<>()).build();
         }
         films.put(film.getId(), film);
         return film;

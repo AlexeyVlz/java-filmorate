@@ -35,6 +35,9 @@ public class InMemoryUserStorage implements UserStorage{
         if (!users.containsKey(user.getId())){
             throw new NullPointerException("Пользователь не обнаружен");
         }
+        if(user.getFriendsList() == null) {
+            user = user.toBuilder().friendsList(new TreeSet<>()).build();
+        }
         users.put(user.getId(), user);
         return user;
     }

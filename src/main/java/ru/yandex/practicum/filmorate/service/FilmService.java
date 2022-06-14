@@ -69,22 +69,28 @@ public class FilmService {
     }
 
     public List<Film> mostPopularFilms(Integer count) throws NullPointerException{
-        TreeSet<Film> mostPopularFilms = new TreeSet<>((f1, f2) ->  f2.getLikes().size() - f1.getLikes().size());
+        TreeSet<Film> mostPopularFilms = new TreeSet<>((f1, f2) ->{
+                if(f1.getLikes().size() <= f2.getLikes().size()) {
+                return 1;
+                } else {
+                    return -1;
+                }
+        });
         mostPopularFilms.addAll(filmStorage.getAllFilms());
         List<Film> tenMostPopularFilms = new ArrayList<>(mostPopularFilms);
         if(tenMostPopularFilms.size() < count){
-            tenMostPopularFilms = tenMostPopularFilms.subList(0, (tenMostPopularFilms.size() - 1));
+            tenMostPopularFilms = tenMostPopularFilms.subList(0, (tenMostPopularFilms.size()));
         } else {
-            tenMostPopularFilms = tenMostPopularFilms.subList(0, (count - 1));
+            tenMostPopularFilms = tenMostPopularFilms.subList(0, (count));
         }
         return  tenMostPopularFilms;
     }
 
     public Film getFilmById(Integer id) {
-        try {
-            return ((InMemoryFilmStorage) filmStorage).getFilms().get(id);
-        } catch (NullPointerException exception) {
+        if(!((InMemoryFilmStorage) filmStorage).getFilms().containsKey(id)) {
             throw new NullPointerException("Фильм не найден");
         }
+            return ((InMemoryFilmStorage) filmStorage).getFilms().get(id);
+
     }
 }

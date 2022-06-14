@@ -59,9 +59,12 @@ public class FilmController {
             film = filmService.update(film);
             log.info("Фильм успешно обновлен");
             return film;
-        } catch (ValidationException | NullPointerException exception) {
+        } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
+        } catch (NullPointerException exception) {
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
         }
     }
 
@@ -72,6 +75,9 @@ public class FilmController {
 
     @GetMapping ("/{id}")
     public Film getFilmById (@PathVariable("id") Integer id) {
+        /*if(id <= 0){
+            throw new ValidationException("id должен быть больше 0");
+        }*/
         log.info("Получен запрос к эндпоинту: GET: /films/{id}");
         try {
             return filmService.getFilmById(id);
@@ -104,8 +110,11 @@ public class FilmController {
         }
     }
 
-    @GetMapping ("/popular?count={count}")
-    public List<Film> mostPopularFilms (@RequestParam(defaultValue = "10", required = false) Integer count) {
+    @GetMapping ("/popular")
+    public List<Film> mostPopularFilms (@RequestParam(required = false) Integer count) {
+        if(count == null) {
+            count = 10;
+        }
         if(count <= 0){
             throw new ValidationException("Количество фильмов должно быть больше нуля");
         }

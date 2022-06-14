@@ -26,13 +26,21 @@ public class UserService {
     }
 
     public User addNewFriend(Integer myId, Integer newFriendId) {
-        User myAccount = getUserById(myId);
-        myAccount.getFriendsList().add(newFriendId);
-        userStorage.update(myAccount);
-        User newFriendAccount = getUserById(newFriendId);
-        newFriendAccount.getFriendsList().add(myId);
-        userStorage.update(newFriendAccount);
-        return myAccount;
+        try {
+            if(!((InMemoryUserStorage) userStorage).getUsers().containsKey(myId)
+            || !((InMemoryUserStorage) userStorage).getUsers().containsKey(newFriendId)){
+                throw new NullPointerException();
+            }
+            User myAccount = getUserById(myId);
+            myAccount.getFriendsList().add(newFriendId);
+            userStorage.update(myAccount);
+            User newFriendAccount = getUserById(newFriendId);
+            newFriendAccount.getFriendsList().add(myId);
+            userStorage.update(newFriendAccount);
+            return myAccount;
+        } catch (NullPointerException exception){
+            throw new NullPointerException("Пользователь не найден");
+        }
     }
 
     public User deletingFriend(Integer myId, Integer newFriendId) {
@@ -45,14 +53,14 @@ public class UserService {
         return myAccount;
     }
 
-    public List<Integer> mutualFriendsList(Integer myId, Integer otherId) {
+    public List<User> mutualFriendsList(Integer myId, Integer otherId) {
         User user = getUserById(myId);
         User userFriend = getUserById(otherId);
         List<Integer> firstList;
         Set<Integer> secondList;
         if(userFriend.getFriendsList().size() <= user.getFriendsList().size()){
             firstList = new ArrayList<>(userFriend.getFriendsList());
-            secondList = user.getFriendsList();
+            secondList = new TreeSet<>(user.getFriendsList());
         } else {
             firstList = new ArrayList<>(user.getFriendsList());
             secondList = userFriend.getFriendsList();
@@ -64,7 +72,11 @@ public class UserService {
                 firstList.remove(firstList.get(i));
             }
         }
-        return firstList;
+        List<User> mutualFriends = new ArrayList<>();
+        for(Integer friendId : firstList) {
+            mutualFriends.add(((InMemoryUserStorage) userStorage).getUsers().get(friendId));
+        }
+        return mutualFriends;
     }
 
     public User create(User user){
@@ -79,8 +91,12 @@ public class UserService {
         return userStorage.getAllUsers();
     }
 
-    public List<Integer> getUserFriends(Integer id) {
-        return new ArrayList<>(getUserById(id).getFriendsList());
+    public List<User> getUserFriends(Integer id) {
+        List<User> friends = new ArrayList<>();
+        for(Integer friendId : getUserById(id).getFriendsList()) {
+            friends.add(((InMemoryUserStorage) userStorage).getUsers().get(friendId));
+        }
+        return friends;
     }
 
     public User getUserById(Integer id) {
