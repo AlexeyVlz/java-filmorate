@@ -139,4 +139,14 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("{id}")
+    public void removeUserById(@PathVariable Integer id) {
+        try{
+            userService.removeUserById(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
 }

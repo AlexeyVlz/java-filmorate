@@ -75,9 +75,6 @@ public class FilmController {
 
     @GetMapping ("/{id}")
     public Film getFilmById (@PathVariable("id") Integer id) {
-        /*if(id <= 0){
-            throw new ValidationException("id должен быть больше 0");
-        }*/
         log.info("Получен запрос к эндпоинту: GET: /films/{id}");
         try {
             return filmService.getFilmById(id);
@@ -119,5 +116,15 @@ public class FilmController {
             throw new ValidationException("Количество фильмов должно быть больше нуля");
         }
         return filmService.mostPopularFilms(count);
+    }
+
+    @DeleteMapping ("/{id}")
+    public void removeFilmById(@PathVariable Integer id) {
+        try{
+            filmService.removeFilmById(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
     }
 }

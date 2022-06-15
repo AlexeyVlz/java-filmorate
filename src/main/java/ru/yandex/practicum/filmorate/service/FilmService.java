@@ -93,4 +93,8 @@ public class FilmService {
             return ((InMemoryFilmStorage) filmStorage).getFilms().get(id);
 
     }
+
+    public void removeFilmById(Integer id) throws NullPointerException {
+        filmStorage.removeFilmById(id);
+    }
 }

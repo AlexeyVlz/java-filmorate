@@ -47,4 +47,11 @@ public class InMemoryFilmStorage implements FilmStorage{
     public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
+
+    public void removeFilmById(Integer id) {
+        if(!films.containsKey(id)){
+            throw new NullPointerException("Фильм не найден");
+        }
+        films.remove(id);
+    }
 }

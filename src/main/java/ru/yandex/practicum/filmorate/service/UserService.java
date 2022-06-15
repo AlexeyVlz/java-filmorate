@@ -107,4 +107,7 @@ public class UserService {
     }
 
 
+    public void removeUserById(Integer id) throws NullPointerException {
+        userStorage.removeUserById(id);
+    }
 }
