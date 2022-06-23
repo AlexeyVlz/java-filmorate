@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.objectsForTests.ObjectsUserControllerTest;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        userController = new UserController();
+        userController = new UserController(new UserService(new InMemoryUserStorage()));
     }
 
     @Test
@@ -28,7 +31,8 @@ public class UserControllerTest {
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
-        Assertions.assertEquals(user, userController.getUsers().get(1));
+        InMemoryUserStorage userStorage = (InMemoryUserStorage) userController.getUserService().getUserStorage();
+        Assertions.assertEquals(user, userStorage.getUsers().get(1));
 
         User uncorrectMail = ObjectsUserControllerTest.uncorrectMail();
         try {
@@ -78,7 +82,7 @@ public class UserControllerTest {
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
-        Assertions.assertEquals(userToCheck, userController.getUsers().get(2));
+        Assertions.assertEquals(userToCheck, userStorage.getUsers().get(2));
     }
 
     @Test

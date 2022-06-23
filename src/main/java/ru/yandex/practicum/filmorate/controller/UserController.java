@@ -2,9 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,16 +25,15 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    private final Map<Integer, User> users;
-    private int id;
+    private final UserService userService;
 
-    public UserController() {
-        this.users = new HashMap<>();
-        this.id = 0;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    public Map<Integer, User> getUsers() {
-        return users;
+    public UserService getUserService() {
+        return userService;
     }
 
     @PostMapping
@@ -41,13 +44,15 @@ public class UserController {
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
-            user.setId(++id);
-            users.put(user.getId(), user);
+            user = userService.create(user);
             log.info("Новый пользователь успешно добавлен");
             return user;
         } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
         }
     }
 
@@ -55,26 +60,93 @@ public class UserController {
     public User update(@RequestBody @Valid User user) {
         log.info("Получен запрос к эндпоинту: PUT: /users");
         try{
-            if (!users.containsKey(user.getId())){
-                throw new NullPointerException("Пользователь не обнаружен");
-            }
             Check.checkUser(user);
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
-            users.put(user.getId(), user);
-
+            user = userService.update(user);
             log.info("Пользователь успешно обновлён");
             return user;
-        } catch (ValidationException | NullPointerException exception) {
+        } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
         }
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return userService.getAllUsers();
+    }
+
+    @GetMapping ("/{id}")
+    public  User getUserById (@PathVariable Integer id){
+        log.info("Получен запрос к эндпоинту: GET: /users/{id}");
+        try {
+            return userService.getUserById(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @PutMapping ("/{id}/friends/{friendId}")
+    public User addNewFriend (@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Получен запрос к эндпоинту: PUT: /users/{id}/friends/{friendId}");
+        /*if(id <= 0 || friendId <= 0){
+            throw new ValidationException("id Должен быть больше 0");
+        }*/
+        try{
+            return userService.addNewFriend(id, friendId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @DeleteMapping ("{id}/friends/{friendId}")
+    public User deletingFriend (@PathVariable Integer id, @PathVariable Integer friendId){
+        log.info("Получен запрос к эндпоинту: DELETE: /users/{id}/friends/{friendId}");
+        try{
+            return userService.deletingFriend(id, friendId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @GetMapping ("{id}/friends/common/{otherId}")
+    public List<User> mutualFriendsList (@PathVariable Integer id, @PathVariable Integer otherId) {
+        log.info("Получен запрос к эндпоинту: GET: /users/{id}/friends/common/{otherId}");
+        try{
+            return userService.mutualFriendsList(id, otherId);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @GetMapping ("{id}/friends")
+    public List<User> getUserFriends (@PathVariable Integer id) {
+        log.info("Получен запрос к эндпоинту: GET: /users/{id}/friends");
+        try{
+            return userService.getUserFriends(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public void removeUserById(@PathVariable Integer id) {
+        try{
+            userService.removeUserById(id);
+        } catch (NullPointerException exception){
+            log.info("Возникла ошибка: " + exception.getMessage());
+            throw new NullPointerException(exception.getMessage());
+        }
     }
 
 }

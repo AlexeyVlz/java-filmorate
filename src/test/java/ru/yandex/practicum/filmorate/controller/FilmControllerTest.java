@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.objectsForTests.ObjectsFilmControllerTest;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +20,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        filmController = new FilmController();
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
     }
 
     @Test
@@ -27,7 +31,8 @@ public class FilmControllerTest {
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
-        Assertions.assertEquals(film, filmController.getFilms().get(1));
+        InMemoryFilmStorage filmStorage = (InMemoryFilmStorage) filmController.getFilmService().getFilmStorage();
+        Assertions.assertEquals(film, filmStorage.getFilms().get(1));
 
         Film emptyName = ObjectsFilmControllerTest.addEmptyNameFilm();
         try {
@@ -81,7 +86,8 @@ public class FilmControllerTest {
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
-        Assertions.assertEquals(correctIdByUpdate, filmController.getFilms().get(1));
+        InMemoryFilmStorage filmStorage = (InMemoryFilmStorage) filmController.getFilmService().getFilmStorage();
+        Assertions.assertEquals(correctIdByUpdate, filmStorage.getFilms().get(1));
 
         Film emptyName = ObjectsFilmControllerTest.addEmptyNameFilm();
         emptyName.setId(1);
