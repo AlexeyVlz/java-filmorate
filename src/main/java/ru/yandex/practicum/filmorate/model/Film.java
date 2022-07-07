@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.validation.*;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Data
@@ -25,7 +26,7 @@ public class Film {
     private final String description;
     @NonNull
     private final LocalDate releaseDate;
-    @NonNull
+    @NonNull @Positive
     private final int duration;
     @Builder.Default
     private final Set<Integer> likes = new TreeSet<>();
