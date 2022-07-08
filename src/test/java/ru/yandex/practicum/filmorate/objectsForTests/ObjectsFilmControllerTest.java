@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.objectsForTests;
+/*package ru.yandex.practicum.filmorate.objectsForTests;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -97,4 +97,4 @@ public class ObjectsFilmControllerTest {
         film.setId(1);
         return film;
     }
-}
+}*/

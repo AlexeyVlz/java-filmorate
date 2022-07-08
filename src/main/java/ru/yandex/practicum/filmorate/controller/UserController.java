@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,16 +56,15 @@ public class UserController {
     }
 
     @PutMapping
-    public User update(@RequestBody @Valid User user) {
+    public void update(@RequestBody @Valid User user) {
         log.info("Получен запрос к эндпоинту: PUT: /users");
         try{
             Check.checkUser(user);
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
-            user = userService.update(user);
+            userService.update(user);
             log.info("Пользователь успешно обновлён");
-            return user;
         } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
@@ -93,13 +91,13 @@ public class UserController {
     }
 
     @PutMapping ("/{id}/friends/{friendId}")
-    public User addNewFriend (@PathVariable Integer id, @PathVariable Integer friendId) {
+    public void addNewFriend (@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Получен запрос к эндпоинту: PUT: /users/{id}/friends/{friendId}");
         /*if(id <= 0 || friendId <= 0){
             throw new ValidationException("id Должен быть больше 0");
         }*/
         try{
-            return userService.addNewFriend(id, friendId);
+            userService.addNewFriend(id, friendId);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
@@ -107,7 +105,7 @@ public class UserController {
     }
 
     @DeleteMapping ("{id}/friends/{friendId}")
-    public User deletingFriend (@PathVariable Integer id, @PathVariable Integer friendId){
+    public boolean deletingFriend (@PathVariable Integer id, @PathVariable Integer friendId){
         log.info("Получен запрос к эндпоинту: DELETE: /users/{id}/friends/{friendId}");
         try{
             return userService.deletingFriend(id, friendId);
@@ -140,9 +138,9 @@ public class UserController {
     }
 
     @DeleteMapping("{id}")
-    public void removeUserById(@PathVariable Integer id) {
+    public boolean removeUserById(@PathVariable Integer id) {
         try{
-            userService.removeUserById(id);
+            return userService.removeUserById(id);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());

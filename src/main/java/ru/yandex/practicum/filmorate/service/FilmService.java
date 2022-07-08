@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.likes.LikesStorage;
+import ru.yandex.practicum.filmorate.storage.mostPopularFilms.MostPopularFilms;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
@@ -18,12 +18,14 @@ import java.util.TreeSet;
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final LikesStorage likesStorage;
+    private final MostPopularFilms mostPopularFilms;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, LikesStorage likesStorage, MostPopularFilms mostPopularFilms) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
+        this.likesStorage = likesStorage;
+        this.mostPopularFilms = mostPopularFilms;
     }
 
     public FilmStorage getFilmStorage() {
@@ -34,67 +36,35 @@ public class FilmService {
         return filmStorage.add(film);
     }
 
-    public Film update(Film film){
-        return filmStorage.update(film);
+    public void update(Film film){
+        filmStorage.update(film);
     }
 
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
     }
 
-    public Film addLike(Integer filmId, Integer userId) {
-        if(!((InMemoryUserStorage)userStorage).getUsers().containsKey(userId)){
-            throw new NullPointerException("Пользователь не найден");
-        }
-        if(!((InMemoryFilmStorage) filmStorage).getFilms().containsKey(filmId)){
-            throw new NullPointerException("Фильм не найден");
-        }
-        Film film = ((InMemoryFilmStorage) filmStorage).getFilms().get(filmId);
-        film.getLikes().add(userId);
-        filmStorage.update(film);
-        return film;
+    public Film getFilmById(Integer id) {
+        return filmStorage.getFilmById(id);
     }
 
-    public Film removeLike(Integer filmId, Integer userId) {
-        if(!((InMemoryUserStorage)userStorage).getUsers().containsKey(userId)){
-            throw new NullPointerException("Пользователь не найден");
-        }
-        if(!((InMemoryFilmStorage) filmStorage).getFilms().containsKey(filmId)){
-            throw new NullPointerException("Фильм не найден");
-        }
-        Film film = ((InMemoryFilmStorage) filmStorage).getFilms().get(filmId);
-        film.getLikes().remove(userId);
-        filmStorage.update(film);
-        return film;
+    public boolean removeFilmById(Integer id) throws NullPointerException {
+        return filmStorage.removeFilmById(id);
+    }
+
+    public void addLike(Integer filmId, Integer userId) {
+        likesStorage.addLike(filmId, userId);
+    }
+
+    public boolean removeLike(Integer filmId, Integer userId) {
+        return likesStorage.removeLike(filmId, userId);
     }
 
     public List<Film> mostPopularFilms(Integer count) throws NullPointerException{
-        TreeSet<Film> mostPopularFilms = new TreeSet<>((f1, f2) ->{
-                if(f1.getLikes().size() <= f2.getLikes().size()) {
-                return 1;
-                } else {
-                    return -1;
-                }
-        });
-        mostPopularFilms.addAll(filmStorage.getAllFilms());
-        List<Film> tenMostPopularFilms = new ArrayList<>(mostPopularFilms);
-        if(tenMostPopularFilms.size() < count){
-            tenMostPopularFilms = tenMostPopularFilms.subList(0, (tenMostPopularFilms.size()));
-        } else {
-            tenMostPopularFilms = tenMostPopularFilms.subList(0, (count));
-        }
-        return  tenMostPopularFilms;
+        return mostPopularFilms.getMostPopularFilms(count);
     }
 
-    public Film getFilmById(Integer id) {
-        if(!((InMemoryFilmStorage) filmStorage).getFilms().containsKey(id)) {
-            throw new NullPointerException("Фильм не найден");
-        }
-            return ((InMemoryFilmStorage) filmStorage).getFilms().get(id);
 
-    }
 
-    public void removeFilmById(Integer id) throws NullPointerException {
-        filmStorage.removeFilmById(id);
-    }
+
 }

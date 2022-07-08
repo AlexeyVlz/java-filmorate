@@ -15,7 +15,7 @@ public class Check {
         if(user.getLogin().length() < 1 || user.getLogin().contains(" ")){
             throw new ValidationException("Введите корректный логин (логин не может содержать пробелы)");
         }
-        if(user.getBirthday().isAfter(LocalDate.now())) {
+        if(user.getBirthday().toLocalDate().isAfter(LocalDate.now())) {
             throw new ValidationException("Дата рождения не может быть позже текущего времени");
         }
     }
@@ -27,7 +27,7 @@ public class Check {
         if(film.getDescription().length() > 200){
             throw new ValidationException("максимальная длина описания — 200 символов");
         }
-        if(film.getReleaseDate().isBefore(LocalDate.of
+        if(film.getReleaseDate().toLocalDate().isBefore(LocalDate.of
                 (1895, 12, 28))){
             throw new ValidationException("дата релиза должна быть не раньше 28 декабря 1895 года");
         }

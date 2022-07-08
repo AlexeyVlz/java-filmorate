@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+/*package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -164,4 +164,4 @@ public class UserControllerTest {
 
     }
 
-}
+}*/

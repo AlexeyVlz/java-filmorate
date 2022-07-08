@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.friends.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
@@ -15,76 +15,36 @@ import java.util.TreeSet;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final FriendStorage friendStorage;
 
     @Autowired
-    public UserService (UserStorage inMemoryUserStorage) {
+    public UserService (UserStorage inMemoryUserStorage, FriendStorage friendStorage) {
         this.userStorage = inMemoryUserStorage;
+        this.friendStorage = friendStorage;
     }
 
     public UserStorage getUserStorage() {
         return userStorage;
     }
 
-    public User addNewFriend(Integer myId, Integer newFriendId) {
-        try {
-            if(!((InMemoryUserStorage) userStorage).getUsers().containsKey(myId)
-            || !((InMemoryUserStorage) userStorage).getUsers().containsKey(newFriendId)){
-                throw new NullPointerException();
-            }
-            User myAccount = getUserById(myId);
-            myAccount.getFriendsList().add(newFriendId);
-            userStorage.update(myAccount);
-            User newFriendAccount = getUserById(newFriendId);
-            newFriendAccount.getFriendsList().add(myId);
-            userStorage.update(newFriendAccount);
-            return myAccount;
-        } catch (NullPointerException exception){
-            throw new NullPointerException("Пользователь не найден");
-        }
+    public void addNewFriend(Integer userId, Integer newFriendId) {
+        friendStorage.addNewFriend(userId, newFriendId);
     }
 
-    public User deletingFriend(Integer myId, Integer newFriendId) {
-        User myAccount = getUserById(myId);
-        myAccount.getFriendsList().remove(newFriendId);
-        userStorage.update(myAccount);
-        User newFriendAccount = getUserById(newFriendId);
-        newFriendAccount.getFriendsList().remove(myId);
-        userStorage.update(newFriendAccount);
-        return myAccount;
+    public boolean deletingFriend(Integer userID, Integer newFriendId) {
+        return friendStorage.deletingFriend(userID, newFriendId);
     }
 
-    public List<User> mutualFriendsList(Integer myId, Integer otherId) {
-        User user = getUserById(myId);
-        User userFriend = getUserById(otherId);
-        List<Integer> firstList;
-        Set<Integer> secondList;
-        if(userFriend.getFriendsList().size() <= user.getFriendsList().size()){
-            firstList = new ArrayList<>(userFriend.getFriendsList());
-            secondList = new TreeSet<>(user.getFriendsList());
-        } else {
-            firstList = new ArrayList<>(user.getFriendsList());
-            secondList = userFriend.getFriendsList();
-        }
-        for (int i = firstList.size() - 1; i >= 0; i--) {
-            int size = secondList.size();
-            secondList.add(firstList.get(i));
-            if(secondList.size() > size){
-                firstList.remove(firstList.get(i));
-            }
-        }
-        List<User> mutualFriends = new ArrayList<>();
-        for(Integer friendId : firstList) {
-            mutualFriends.add(((InMemoryUserStorage) userStorage).getUsers().get(friendId));
-        }
-        return mutualFriends;
+    public List<User> mutualFriendsList(Integer userId, Integer otherId) {
+        return friendStorage.mutualFriendsList(userId, otherId);
     }
 
     public User create(User user){
-        return userStorage.create(user);
+        return userStorage.save(user);
     }
 
-    public User update(User user) {
-        return userStorage.update(user);
+    public void update(User user) {
+        userStorage.update(user);
     }
 
     public List<User> getAllUsers() {
@@ -92,22 +52,14 @@ public class UserService {
     }
 
     public List<User> getUserFriends(Integer id) {
-        List<User> friends = new ArrayList<>();
-        for(Integer friendId : getUserById(id).getFriendsList()) {
-            friends.add(((InMemoryUserStorage) userStorage).getUsers().get(friendId));
-        }
-        return friends;
+        return friendStorage.getUserFriends(id);
     }
 
     public User getUserById(Integer id) {
-        if(!((InMemoryUserStorage) userStorage).getUsers().containsKey(id)){
-            throw new NullPointerException("Пользователь не обнаружен");
-        }
-        return ((InMemoryUserStorage) userStorage).getUsers().get(id);
+        return userStorage.getUserById(id);
     }
 
-
-    public void removeUserById(Integer id) throws NullPointerException {
-        userStorage.removeUserById(id);
+    public boolean removeUserById(Integer id) throws NullPointerException {
+        return userStorage.removeUserById(id);
     }
 }

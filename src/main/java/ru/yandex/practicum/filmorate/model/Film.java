@@ -5,9 +5,12 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.validation.constraints.NotBlank;
+import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,9 +28,10 @@ public class Film {
     @NonNull @NotBlank @Size(min = 1, max = 200)
     private final String description;
     @NonNull
-    private final LocalDate releaseDate;
+    private final Date releaseDate;
     @NonNull @Positive
     private final int duration;
-    @Builder.Default
-    private final Set<Integer> likes = new TreeSet<>();
+    @NonNull
+    private final FilmMpa ratingMpa;
+    private final List<FilmGenres> genres = new ArrayList<>();
 }

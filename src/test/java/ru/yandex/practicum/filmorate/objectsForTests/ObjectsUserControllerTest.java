@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.objectsForTests;
+/*package ru.yandex.practicum.filmorate.objectsForTests;
 
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -80,3 +80,4 @@ public class ObjectsUserControllerTest {
                 .build();
     }
 }
+*/

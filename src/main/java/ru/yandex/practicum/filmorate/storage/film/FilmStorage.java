@@ -8,9 +8,13 @@ public interface FilmStorage {
 
     Film add(Film film);
 
-    Film update(Film film);
+    void update(Film film);
 
     List<Film> getAllFilms();
 
-    void removeFilmById(Integer id);
+    Film getFilmById(Integer id);
+
+    boolean removeFilmById(Integer id);
+
+
 }
