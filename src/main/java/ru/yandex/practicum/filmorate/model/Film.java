@@ -33,5 +33,5 @@ public class Film {
     private final int duration;
     @NonNull
     private final FilmMpa ratingMpa;
-    private final List<FilmGenres> genres = new ArrayList<>();
+    private List<FilmGenres> genres;
 }

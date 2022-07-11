@@ -1,10 +1,11 @@
-/*package ru.yandex.practicum.filmorate.objectsForTests;
+package ru.yandex.practicum.filmorate.objectsForTests;
 
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Date;
 
 public class ObjectsUserControllerTest {
 
@@ -13,7 +14,7 @@ public class ObjectsUserControllerTest {
                 .email("777@yandex.ru")
                 .login("Alexey777")
                 .name("Alexey")
-                .birthday(LocalDate.of(1988, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
 
@@ -22,7 +23,7 @@ public class ObjectsUserControllerTest {
                 .email("333@yandex.ru")
                 .login("Roman333")
                 .name("Roman")
-                .birthday(LocalDate.of(2000, 1, 1))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(2000, 1, 1)))
                 .build();
     }
 
@@ -31,7 +32,7 @@ public class ObjectsUserControllerTest {
                 .email("777yandex.ru")
                 .login("Alexey777")
                 .name("Alexey")
-                .birthday(LocalDate.of(1988, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
 
@@ -40,7 +41,7 @@ public class ObjectsUserControllerTest {
                 .email("")
                 .login("Alexey777")
                 .name("Alexey")
-                .birthday(LocalDate.of(1988, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
 
@@ -49,7 +50,7 @@ public class ObjectsUserControllerTest {
                 .email("777@yandex.ru")
                 .login("Alexey 777")
                 .name("Alexey")
-                .birthday(LocalDate.of(1988, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
 
@@ -58,7 +59,7 @@ public class ObjectsUserControllerTest {
                 .email("777@yandex.ru")
                 .login("")
                 .name("Alexey")
-                .birthday(LocalDate.of(1988, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
 
@@ -67,7 +68,7 @@ public class ObjectsUserControllerTest {
                 .email("777@yandex.ru")
                 .login("Alexey777")
                 .name("Alexey")
-                .birthday(LocalDate.of(2030, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(2030, 9, 2)))
                 .build();
     }
 
@@ -76,8 +77,7 @@ public class ObjectsUserControllerTest {
                 .email("777@yandex.ru")
                 .login("Alexey777")
                 .name("")
-                .birthday(LocalDate.of(1988, 9, 2))
+                .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
 }
-*/

@@ -7,13 +7,19 @@ import java.util.Objects;
 public class FilmGenres {
 
     private final Integer id;
+    private final String name;
 
-    public FilmGenres(Integer id) {
+    public FilmGenres(Integer id, String name) {
         this.id = id;
+        this.name = name;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -21,18 +27,19 @@ public class FilmGenres {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FilmGenres that = (FilmGenres) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
         return "FilmGenres{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

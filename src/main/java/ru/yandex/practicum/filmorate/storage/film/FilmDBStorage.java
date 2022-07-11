@@ -6,21 +6,27 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmGenres;
 import ru.yandex.practicum.filmorate.model.FilmMpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.genres.GenresStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class FilmDBStorage implements FilmStorage{
 
     JdbcTemplate jdbcTemplate;
+    private final GenresStorage genresStorage;
 
     @Autowired
-    public FilmDBStorage(JdbcTemplate jdbcTemplate) {
+    public FilmDBStorage(JdbcTemplate jdbcTemplate, GenresStorage genresStorage) {
         this.jdbcTemplate = jdbcTemplate;
+        this.genresStorage = genresStorage;
     }
 
     @Override
@@ -40,9 +46,8 @@ public class FilmDBStorage implements FilmStorage{
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
-
+        //genresStorage.addGenres(film);
         return film;
-
     }
 
     @Override
@@ -63,16 +68,21 @@ public class FilmDBStorage implements FilmStorage{
     }
     @Override
     public List<Film> getAllFilms(){
-        final String sqlQuery = "select * from FILMS";
+        final String sqlQuery = "select * from FILMS left join MPA M on M.MPA_ID = FILMS.MPA_ID";
         return jdbcTemplate.query(sqlQuery, FilmDBStorage::makeFilm);
     }
     @Override
     public Film getFilmById(Integer id){
-        final String sqlQuery = "select * from FILMS where FILM_ID = ?";
+        final String sqlQuery = "select * from FILMS " +
+                "left join MPA M on M.MPA_ID = FILMS.MPA_ID " +
+                "where FILMS.FILM_ID = ?";
         final List<Film> films = jdbcTemplate.query(sqlQuery, FilmDBStorage::makeFilm, id);
         if(films.size() != 1){
             // TODO not found
         }
+        Film film = films.get(0);
+        //return film.toBuilder().genres(genresStorage.getGenres(film.getId())).build();
+        //film.setGenres(genresStorage.getGenres(film.getId()));
         return films.get(0);
     }
     @Override
@@ -88,7 +98,7 @@ public class FilmDBStorage implements FilmStorage{
                 .description(rs.getString("DESCRIPTION"))
                 .releaseDate(rs.getDate("RELEASEdATE"))
                 .duration(rs.getInt("DURATION"))
-                .ratingMpa(new FilmMpa(rs.getInt("MPA_ID")))
+                .ratingMpa(new FilmMpa(rs.getInt("MPA_ID"), rs.getString("TITLE")))
                 .build();
     }
 }

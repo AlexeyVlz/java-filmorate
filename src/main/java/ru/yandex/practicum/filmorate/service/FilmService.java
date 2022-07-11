@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.genres.GenresStorage;
 import ru.yandex.practicum.filmorate.storage.likes.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.mostPopularFilms.MostPopularFilms;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -21,8 +22,10 @@ public class FilmService {
     private final LikesStorage likesStorage;
     private final MostPopularFilms mostPopularFilms;
 
+
     @Autowired
-    public FilmService(FilmStorage filmStorage, LikesStorage likesStorage, MostPopularFilms mostPopularFilms) {
+    public FilmService(FilmStorage filmStorage, LikesStorage likesStorage, MostPopularFilms mostPopularFilms,
+                       GenresStorage genresStorage) {
         this.filmStorage = filmStorage;
         this.likesStorage = likesStorage;
         this.mostPopularFilms = mostPopularFilms;
