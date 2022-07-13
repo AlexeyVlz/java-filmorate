@@ -41,7 +41,7 @@ public class FilmDBStorage implements FilmStorage{
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
-
+        genresStorage.addGenres(film);
 
         return film;
     }
@@ -52,14 +52,23 @@ public class FilmDBStorage implements FilmStorage{
                 "FILM_NAME = ?, " +
                 "DESCRIPTION = ?, " +
                 "RELEASEdATE = ?, " +
-                "DURATION = ?" +
+                "DURATION = ?, " +
+                "MPA_ID = ? " +
                 "where FILM_ID = ?";
         jdbcTemplate.update(sqlQuery
                 , film.getName()
                 , film.getDescription()
                 , film.getReleaseDate()
                 , film.getDuration()
+                , film.getMpa().getId()
                 , film.getId());
+        if(film.getGenres() == null || film.getGenres().size() == 0){
+            genresStorage.deleteFilmGenres(film);
+        } else {
+            genresStorage.deleteFilmGenres(film);
+            genresStorage.addGenres(film);
+        }
+
         return film;
     }
     @Override
@@ -71,15 +80,14 @@ public class FilmDBStorage implements FilmStorage{
     public Film getFilmById(Integer id){
         final String sqlQuery = "select * from FILMS " +
                 "left join MPA M on M.MPA_ID = FILMS.MPA_ID " +
+                //"left join FILM_GENRES FG on FILMS.FILM_ID = FG.FILM_ID " +
+                //"left join GENRES G on G.GENRE_ID = FG.GENRE_ID " +
                 "where FILMS.FILM_ID = ?";
         final List<Film> films = jdbcTemplate.query(sqlQuery, FilmDBStorage::makeFilm, id);
         if(films.size() != 1){
             // TODO not found
         }
-        Film film = films.get(0);
-        //return film.toBuilder().genres(genresStorage.getGenres(film.getId())).build();
-        //film.setGenres(genresStorage.getGenres(film.getId()));
-        return films.get(0);
+        return films.get(0).toBuilder().genres(genresStorage.getFilmGenres(id)).build();
     }
     @Override
     public boolean removeFilmById(Integer id){

@@ -20,10 +20,13 @@ merge into GENRES (GENRE_ID, TITLE)
 values (2, 'Драма');
 
 merge into GENRES (GENRE_ID, TITLE)
-values (3, 'Триллер');
+values (3, 'Мультфильм');
 
 merge into GENRES (GENRE_ID, TITLE)
-values (4, 'Документальный');
+values (4, 'Триллер');
 
 merge into GENRES (GENRE_ID, TITLE)
-values (5, 'Боевик');
+values (5, 'Документальный');
+
+merge into GENRES (GENRE_ID, TITLE)
+values (6, 'Боевик');

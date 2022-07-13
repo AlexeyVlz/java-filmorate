@@ -31,9 +31,12 @@ public class mpaController {
     }
 
     @GetMapping("/{id}")
-    public FilmMpa getGenre(@PathVariable("id") Integer id) {
+    public FilmMpa getMpaById(@PathVariable("id") Integer id) {
         log.info("Получен запрос к эндпоинту: GET: /mpa/{id}");
         try{
+            if(id <= 0) {
+                throw new NullPointerException("неверно задан id объекта MPA");
+            }
             return filmService.getMpaById(id);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());

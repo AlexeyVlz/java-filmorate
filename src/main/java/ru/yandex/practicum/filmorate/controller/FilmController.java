@@ -79,6 +79,9 @@ public class FilmController {
     public Film getFilmById (@PathVariable("id") Integer id) {
         log.info("Получен запрос к эндпоинту: GET: /films/{id}");
         try {
+            if(id <= 0) {
+                throw new NullPointerException("Некорректно задан id фильма");
+            }
             return filmService.getFilmById(id);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());
@@ -102,6 +105,9 @@ public class FilmController {
     public boolean removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
         log.info("Получен запрос к эндпоинту: DELETE: /films/{id}/like/{userId}");
         try {
+            if(id <= 0 || userId <= 0) {
+                throw new NullPointerException("Некорректно задан id фильма или userId");
+            }
             return filmService.removeLike(id, userId);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());

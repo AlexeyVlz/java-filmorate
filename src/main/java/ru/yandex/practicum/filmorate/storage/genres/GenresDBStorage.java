@@ -22,13 +22,20 @@ public class GenresDBStorage implements GenresStorage{
     }
 
     public Film addGenres(Film film){
-        for(int i = 0; i < film.getGenres().size(); i++) {
-        String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?)";
-        jdbcTemplate.update(sqlQuery
-                , film.getId()
-                , film.getGenres().get(i));
+        if(film.getGenres() != null) {
+            for (int i = 0; i < film.getGenres().size(); i++) {
+                String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?)";
+                jdbcTemplate.update(sqlQuery
+                        , film.getId()
+                        , film.getGenres().get(i).getId());
+            }
         }
         return film;
+    }
+
+    public boolean deleteFilmGenres(Film film) {
+        String sqlQuery = "delete from FILM_GENRES where FILM_ID = ?";
+        return jdbcTemplate.update(sqlQuery, film.getId()) > 0;
     }
 
     public List<FilmGenres> getFilmGenres(Integer id) {

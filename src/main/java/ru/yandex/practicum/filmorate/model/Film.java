@@ -25,5 +25,5 @@ public class Film {
     private final int duration;
     @NonNull
     private final FilmMpa mpa;
-    private List<Integer> genres;
+    private List<FilmGenres> genres;
 }

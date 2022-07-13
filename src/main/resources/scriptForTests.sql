@@ -55,7 +55,8 @@ CREATE TABLE IF NOT EXISTS FILM_LIKES (
 
 CREATE TABLE IF NOT EXISTS FILM_GENRES (
                                            FILM_ID int REFERENCES FILMS(film_id) ON DELETE CASCADE,
-                                           GENRE_ID int REFERENCES GENRES(genre_id ) ON DELETE CASCADE
+                                           GENRE_ID int REFERENCES GENRES(genre_id ) ON DELETE CASCADE,
+                                            UNIQUE (FILM_ID, GENRE_ID)
 );
 
 
@@ -81,10 +82,13 @@ merge into GENRES (GENRE_ID, TITLE)
     values (2, 'Драма');
 
 merge into GENRES (GENRE_ID, TITLE)
-    values (3, 'Триллер');
+    values (3, 'Мультфильм');
 
 merge into GENRES (GENRE_ID, TITLE)
-    values (4, 'Документальный');
+    values (4, 'Триллер');
 
 merge into GENRES (GENRE_ID, TITLE)
-    values (5, 'Боевик');
+    values (5, 'Документальный');
+
+merge into GENRES (GENRE_ID, TITLE)
+    values (6, 'Боевик');

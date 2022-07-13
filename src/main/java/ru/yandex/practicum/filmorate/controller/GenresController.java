@@ -33,6 +33,9 @@ public class GenresController {
     public FilmGenres getGenre(@PathVariable("id") Integer id) {
         log.info("Получен запрос к эндпоинту: GET: /genres/{id}");
         try{
+            if(id <= 0) {
+                throw new NullPointerException("неверно задан id объекта genre");
+            }
             return filmService.getGenre(id);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());

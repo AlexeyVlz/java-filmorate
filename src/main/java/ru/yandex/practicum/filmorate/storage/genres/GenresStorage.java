@@ -15,4 +15,6 @@ public interface GenresStorage {
 
     FilmGenres getGenre(Integer id);
 
+    boolean deleteFilmGenres(Film film);
+
 }
