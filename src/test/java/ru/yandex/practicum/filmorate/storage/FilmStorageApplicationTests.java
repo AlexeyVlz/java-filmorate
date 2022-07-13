@@ -29,23 +29,17 @@ public class FilmStorageApplicationTests {
     @Test
     public void testAddAndGetById() {
         Film film = ObjectsFilmControllerTest.addCorrectFilm();
+        film = film.toBuilder().genres(new ArrayList<>()).build();
         filmStorage.add(film);
         film.setId(1);
         Assertions.assertEquals(film, filmStorage.getFilmById(1));
     }
 
-    /*@Test
-    public void testGetFilmById() {
-        Film film = ObjectsFilmControllerTest.addCorrectFilm();
-        film.setId(1);
-        Assertions.assertEquals(film, filmStorage.getFilmById(1));
-    }*/
-
     @Test
     public void testGetAllFilms() {
         Film film1 = ObjectsFilmControllerTest.addCorrectFilm();
         film1.setId(1);
-        filmStorage.add(film1); // new
+        filmStorage.add(film1);
         Film film2 = ObjectsFilmControllerTest.addCorrectFilm2();
         filmStorage.add(film2);
         film2.setId(2);
@@ -55,10 +49,11 @@ public class FilmStorageApplicationTests {
 
     @Test
     public void testUpdate() {
-        Film film1 = ObjectsFilmControllerTest.addCorrectFilm();// new
-        filmStorage.add(film1);// new
+        Film film1 = ObjectsFilmControllerTest.addCorrectFilm();
+        filmStorage.add(film1);
         Film film = ObjectsFilmControllerTest.addCorrectFilm2();
         film.setId(1);
+        film = film.toBuilder().genres(new ArrayList<>()).build();
         filmStorage.update(film);
         Assertions.assertEquals(film, filmStorage.getFilmById(1));
     }
