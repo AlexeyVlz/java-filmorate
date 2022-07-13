@@ -5,12 +5,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmGenres;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class GenresDBStorage implements GenresStorage{
@@ -23,15 +22,18 @@ public class GenresDBStorage implements GenresStorage{
 
     public Film addGenres(Film film){
         if(film.getGenres() != null) {
-            for (int i = 0; i < film.getGenres().size(); i++) {
-                String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?)";
+            removeDuplicate(film);
+            for (FilmGenres genres : film.getGenres()) {
+                String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?) ";
                 jdbcTemplate.update(sqlQuery
                         , film.getId()
-                        , film.getGenres().get(i).getId());
+                        , genres.getId());
             }
         }
         return film;
     }
+
+    
 
     public boolean deleteFilmGenres(Film film) {
         String sqlQuery = "delete from FILM_GENRES where FILM_ID = ?";
@@ -59,5 +61,18 @@ public class GenresDBStorage implements GenresStorage{
 
     static FilmGenres makeGenre(ResultSet rs, int rowNum) throws SQLException {
         return new FilmGenres(rs.getInt("GENRE_ID"), rs.getString("TITLE"));
+    }
+
+    private Film removeDuplicate(Film film) {
+        int genresSize = film.getGenres().size();
+        Set<Integer> genresId = new HashSet<>();
+        for(int i = 0; i < genresSize; i++){
+            int sizeSet = genresId.size();
+            genresId.add(film.getGenres().get(i).getId());
+            if(genresId.size() == sizeSet){
+                film.getGenres().remove(i);
+            }
+        }
+        return film;
     }
 }
