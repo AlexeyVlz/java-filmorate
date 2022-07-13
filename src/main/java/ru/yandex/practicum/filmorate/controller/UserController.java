@@ -56,15 +56,19 @@ public class UserController {
     }
 
     @PutMapping
-    public void update(@RequestBody @Valid User user) {
+    public User update(@RequestBody @Valid User user) {
         log.info("Получен запрос к эндпоинту: PUT: /users");
+        if(user.getId() <= 0){
+            throw new NullPointerException("Некорректно задан id пользователя");
+        }
         try{
             Check.checkUser(user);
             if(user.getName().isEmpty()) {
                 user.setName(user.getLogin());
             }
-            userService.update(user);
+            User user1 = userService.update(user);
             log.info("Пользователь успешно обновлён");
+            return user1;
         } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
@@ -83,6 +87,9 @@ public class UserController {
     public  User getUserById (@PathVariable Integer id){
         log.info("Получен запрос к эндпоинту: GET: /users/{id}");
         try {
+            if(id <= 0){
+                throw new NullPointerException("Некорректно задан id пользователя");
+            }
             return userService.getUserById(id);
         } catch (NullPointerException exception){
             log.info("Возникла ошибка: " + exception.getMessage());
@@ -93,9 +100,9 @@ public class UserController {
     @PutMapping ("/{id}/friends/{friendId}")
     public void addNewFriend (@PathVariable Integer id, @PathVariable Integer friendId) {
         log.info("Получен запрос к эндпоинту: PUT: /users/{id}/friends/{friendId}");
-        /*if(id <= 0 || friendId <= 0){
-            throw new ValidationException("id Должен быть больше 0");
-        }*/
+        if(id <= 0 || friendId <= 0){
+            throw new NullPointerException("Некорректно задан id пользователя / id нового друга");
+        }
         try{
             userService.addNewFriend(id, friendId);
         } catch (NullPointerException exception){

@@ -19,10 +19,9 @@ public class User {
     private  int id;
     @NonNull @Email
     private  String email;
+    private  String name;
     @NonNull @NotBlank
     private  String login;
-    private  String name;
     private Date birthday;
-    /*@Builder.Default
-    private Map<Integer, Boolean> friendsList = new HashMap<>();*/
+
 }

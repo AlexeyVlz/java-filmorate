@@ -12,7 +12,7 @@ public interface UserStorage {
 
     List<User> getAllUsers();
 
-    void update(User user);
+    User update(User user);
 
     boolean removeUserById(Integer id);
 

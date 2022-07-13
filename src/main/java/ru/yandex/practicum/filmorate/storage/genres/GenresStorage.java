@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface GenresStorage {
 
-    void addGenres(Film film);
+    Film addGenres(Film film);
 
-    List<FilmGenres> getGenres(Integer id);
+    List<FilmGenres> getFilmGenres(Integer id);
+
+    List<FilmGenres> getAllGenres();
+
+    FilmGenres getGenre(Integer id);
 
 }

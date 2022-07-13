@@ -1,16 +1,11 @@
 package ru.yandex.practicum.filmorate.objectsForTests;
 
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmGenres;
 import ru.yandex.practicum.filmorate.model.FilmMpa;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.TreeSet;
 
 public class ObjectsFilmControllerTest {
 
@@ -20,7 +15,7 @@ public class ObjectsFilmControllerTest {
                     .description("Отличный фильм")
                     .releaseDate(java.sql.Date.valueOf(LocalDate.of(2016, 11, 11)))
                     .duration(118)
-                    .ratingMpa(new FilmMpa(1, "G"))
+                    .mpa(new FilmMpa(1, "G"))
                     //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                     .build();
     }
@@ -31,8 +26,30 @@ public class ObjectsFilmControllerTest {
                 .description("Сильный фильм")
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(1997, 10, 13)))
                 .duration(118)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
+                .build();
+    }
+
+    public static Film addCorrectFilm3() {
+        return Film.builder()
+                .name("Бегущий по лезвию 2049")
+                .description("Интересный фильм")
+                .releaseDate(java.sql.Date.valueOf(LocalDate.of(2017, 10, 05)))
+                .duration(163)
+                .mpa(new FilmMpa(1, "G"))
+                //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
+                .build();
+    }
+
+    public static Film CorrectFilmWithGenres() {
+        return Film.builder()
+                .name("Вор")
+                .description("Сильный фильм")
+                .releaseDate(java.sql.Date.valueOf(LocalDate.of(1997, 10, 13)))
+                .duration(118)
+                .mpa(new FilmMpa(1, "G"))
+                .genres(new ArrayList<>(List.of(2, 5)))
                 .build();
     }
 
@@ -42,7 +59,7 @@ public class ObjectsFilmControllerTest {
                 .description("Отличный фильм")
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(2016, 11, 11)))
                 .duration(118)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                 .build();
     }
@@ -58,7 +75,7 @@ public class ObjectsFilmControllerTest {
                 .description(description)
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(2016, 11, 11)))
                 .duration(118)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                 .build();
     }
@@ -69,7 +86,7 @@ public class ObjectsFilmControllerTest {
                 .description("Отличный фильм")
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(1016, 11, 11)))
                 .duration(118)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                 .build();
     }
@@ -80,7 +97,7 @@ public class ObjectsFilmControllerTest {
                 .description("Отличный фильм")
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(2016, 11, 11)))
                 .duration(-1)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                 .build();
     }
@@ -91,7 +108,7 @@ public class ObjectsFilmControllerTest {
                 .description("Обновление информации")
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(2016, 11, 11)))
                 .duration(118)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                 .build();
         film.setId(3);
@@ -104,7 +121,7 @@ public class ObjectsFilmControllerTest {
                 .description("Обновление информации")
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(2016, 11, 11)))
                 .duration(118)
-                .ratingMpa(new FilmMpa(1, "G"))
+                .mpa(new FilmMpa(1, "G"))
                 //.genres(new ArrayList<FilmGenres>(List.of(new FilmGenres(2, "Драма"))))
                 .build();
         film.setId(1);

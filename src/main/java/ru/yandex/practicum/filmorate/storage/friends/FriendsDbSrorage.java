@@ -6,7 +6,10 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class FriendsDbSrorage implements FriendStorage{
@@ -18,33 +21,52 @@ public class FriendsDbSrorage implements FriendStorage{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addNewFriend(Integer userId, Integer newFriendId){
+    public void addNewFriend(Integer offerFriendshipUser, Integer newFriendId){
         String sqlQuery = "insert into USER_FRIENDS (USER_ID, FRIEND_ID, FRIENDSHIP_STATUS) values (?, ?, ?)";
 
         jdbcTemplate.update(sqlQuery,
-                userId,
+                offerFriendshipUser,
                 newFriendId,
                 false);
     }
 
+    public void acceptFriendship(Integer offerFriendshipUser, Integer acceptFrendshipUser) {
+        String sqlQuery = "update USER_FRIENDS set FRIENDSHIP_STATUS = ? where USER_ID = ? and FRIEND_ID = ?";
+
+        jdbcTemplate.update(sqlQuery,
+                true,
+                offerFriendshipUser,
+                acceptFrendshipUser);
+    }
+
+
     public boolean deletingFriend(Integer userID, Integer newFriendId) {
-        String sqlQuery = "delete from USER_FRIENDS where (USER_ID = ?, FRIEND_ID = ?)";
+        String sqlQuery = "delete from USER_FRIENDS where (USER_ID = ? and FRIEND_ID = ?)";
         return jdbcTemplate.update(sqlQuery, userID, newFriendId) > 0;
     }
 
     public List<User> mutualFriendsList(Integer userId, Integer otherId) {
-        String sqlQuery = "select uf1.FRIEND_ID " +
-        "from (SELECT * from USER_FRIENDS " +
-                "where USER_FRIENDS.USER_ID = ? and USER_FRIENDS.FRIENDSHIP_STATUS = true) as uf1 " +
-        "join (select * from USER_FRIENDS " +
-                "where USER_FRIENDS.USER_ID = ? and USER_FRIENDS.FRIENDSHIP_STATUS = true) as uf2 " +
-        "ON uf1.FRIEND_ID = uf2.FRIEND_ID";
+        List<User> mutualFriendsList = new ArrayList<>();
+        Set<User> firstUser = new HashSet<>(getUserFriends(userId));
+        for(User user : getUserFriends(otherId)){
+            int firstUserSize = firstUser.size();
+            firstUser.add(user);
+            if(firstUser.size() == firstUserSize){
+                mutualFriendsList.add(user);
+            }
+        }
+        return mutualFriendsList;
 
-        return jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser, userId, otherId);
     }
     public List<User> getUserFriends(Integer id) {
-        String sqlQuery = "select * from USER_FRIENDS where USER_ID = ?";
-        return jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser, id);
+        String sqlQuery = "select * from " +
+                "(select FRIEND_ID from USER_FRIENDS where USER_ID = ? " +
+                "UNION " +
+                "select USER_ID from USER_FRIENDS where FRIEND_ID = ? and FRIENDSHIP_STATUS = ?) as fr " +
+                "left join USERS on fr.FRIEND_ID = USERS.USER_ID";
+
+                        
+        return jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser, id, id, true);
     }
 }
 

@@ -6,15 +6,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmGenres;
 import ru.yandex.practicum.filmorate.model.FilmMpa;
-import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.genres.GenresStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -42,16 +37,17 @@ public class FilmDBStorage implements FilmStorage{
             stmt.setString(2, film.getDescription());
             stmt.setDate(3, film.getReleaseDate());
             stmt.setInt(4, film.getDuration());
-            stmt.setInt(5, film.getRatingMpa().getId());
+            stmt.setInt(5, film.getMpa().getId());
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
-        //genresStorage.addGenres(film);
+
+
         return film;
     }
 
     @Override
-    public void update(Film film){
+    public Film update(Film film){
         String sqlQuery = "update FILMS set " +
                 "FILM_NAME = ?, " +
                 "DESCRIPTION = ?, " +
@@ -64,7 +60,7 @@ public class FilmDBStorage implements FilmStorage{
                 , film.getReleaseDate()
                 , film.getDuration()
                 , film.getId());
-
+        return film;
     }
     @Override
     public List<Film> getAllFilms(){
@@ -91,14 +87,14 @@ public class FilmDBStorage implements FilmStorage{
         return jdbcTemplate.update(sqlQuery, id) > 0;
     }
 
-    static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
+    public static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
         return Film.builder()
                 .id(rs.getInt("FILM_ID"))
                 .name(rs.getString("FILM_NAME"))
                 .description(rs.getString("DESCRIPTION"))
                 .releaseDate(rs.getDate("RELEASEdATE"))
                 .duration(rs.getInt("DURATION"))
-                .ratingMpa(new FilmMpa(rs.getInt("MPA_ID"), rs.getString("TITLE")))
+                .mpa(new FilmMpa(rs.getInt("MPA_ID"), rs.getString("TITLE")))
                 .build();
     }
 }

@@ -19,56 +19,10 @@ import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class FilmorateApplicationTests {
 
-	private final UserDbStorage userStorage;
-	private final FilmDBStorage filmStorage;
-
 	@Test
-	public void testSaveAndGetUserById() {
-		User user = ObjectsUserControllerTest.correctUser();
-		userStorage.save(user);
-		user.setId(1);
-		Assertions.assertEquals(userStorage.getUserById(1), user);
-	}
-
-	@Test
-	public void testGetAllUsers(){
-		List<User> users = new ArrayList<>();
-		User user1 = ObjectsUserControllerTest.correctUser();
-		user1.setId(1);
-		User user2 = ObjectsUserControllerTest.correctUser2();
-		userStorage.save(user2);
-		user2.setId(2);
-		users.add(user1);
-		users.add(user2);
-		Assertions.assertEquals(users, userStorage.getAllUsers());
-	}
-
-	@Test
-	public void testUpdateUser() {
-		User user = ObjectsUserControllerTest.correctUser2().toBuilder().email("333@yandex.ru").build();
-		user.setId(2);
-		Assertions.assertEquals(user, userStorage.getUserById(2));
-	}
-
-	@Test
-	public void testRemoveUserById() {
-		User user = ObjectsUserControllerTest.correctUser();
-		user.setId(1);
-		List<User> users = new ArrayList<>(List.of(user));
-		userStorage.removeUserById(2);
-		Assertions.assertEquals(users, userStorage.getAllUsers());
-	}
-
-	@Test
-	public void testAddFilm() {
-		Film film = ObjectsFilmControllerTest.addCorrectFilm();
-		filmStorage.add(film);
-		film.setId(1);
-		Assertions.assertEquals(film, filmStorage.getFilmById(1));
+	void contextLoads() {
 	}
 
 

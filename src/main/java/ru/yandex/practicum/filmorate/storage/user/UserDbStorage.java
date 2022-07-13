@@ -56,7 +56,7 @@ public class UserDbStorage implements UserStorage{
         return jdbcTemplate.query(sqlQuery, UserDbStorage::makeUser);
     }
 
-    public void update(User user) {
+    public User update(User user) {
         String sqlQuery = "update USERS set " +
                             "EMAIL = ?, " +
                             "USER_LOGIN = ?, " +
@@ -69,6 +69,7 @@ public class UserDbStorage implements UserStorage{
                             , user.getName()
                             , user.getBirthday()
                             , user.getId());
+        return user;
     }
 
     public boolean removeUserById(Integer id) {

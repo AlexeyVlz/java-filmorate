@@ -51,12 +51,16 @@ public class FilmController {
     }
 
     @PutMapping
-    public void update(@RequestBody @Valid Film film)  {
+    public Film update(@RequestBody @Valid Film film)  {
         log.info("Получен запрос к эндпоинту: PUT: /films");
         try {
+            if(film.getId() < 0){
+                throw new NullPointerException("Некорректно задан id фильма");
+            }
             Check.checkFilm(film);
-            filmService.update(film);
+            Film film1 = filmService.update(film);
             log.info("Фильм успешно обновлен");
+            return film1;
         } catch (ValidationException exception) {
             log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());

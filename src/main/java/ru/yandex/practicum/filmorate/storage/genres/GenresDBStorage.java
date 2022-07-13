@@ -21,21 +21,33 @@ public class GenresDBStorage implements GenresStorage{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addGenres(Film film){
+    public Film addGenres(Film film){
         for(int i = 0; i < film.getGenres().size(); i++) {
         String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?)";
         jdbcTemplate.update(sqlQuery
                 , film.getId()
-                , film.getGenres().get(i).getId());
+                , film.getGenres().get(i));
         }
+        return film;
     }
 
-    public List<FilmGenres> getGenres(Integer id) {
+    public List<FilmGenres> getFilmGenres(Integer id) {
         final String sqlQuery = "select FILM_GENRES.GENRE_ID, G.TITLE " +
                                 "from FILM_GENRES " +
                                 "left join GENRES G on G.GENRE_ID = FILM_GENRES.GENRE_ID " +
                                 "where FILM_ID = ?";
         return jdbcTemplate.query(sqlQuery, GenresDBStorage::makeGenre, id);
+    }
+
+    public List<FilmGenres> getAllGenres(){
+        final String sqlQuery = "select * from GENRES";
+        return jdbcTemplate.query(sqlQuery, GenresDBStorage::makeGenre);
+    }
+
+    public FilmGenres getGenre(Integer id){
+        final String sqlQuery = "select * from GENRES where GENRE_ID = ?";
+        List<FilmGenres> filmGenres =  jdbcTemplate.query(sqlQuery, GenresDBStorage::makeGenre, id);
+        return filmGenres.get(0);
     }
 
     static FilmGenres makeGenre(ResultSet rs, int rowNum) throws SQLException {

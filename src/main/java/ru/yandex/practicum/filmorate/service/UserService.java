@@ -43,8 +43,8 @@ public class UserService {
         return userStorage.save(user);
     }
 
-    public void update(User user) {
-        userStorage.update(user);
+    public User update(User user) {
+        return userStorage.update(user);
     }
 
     public List<User> getAllUsers() {

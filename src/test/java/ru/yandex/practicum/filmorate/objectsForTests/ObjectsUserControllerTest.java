@@ -27,6 +27,15 @@ public class ObjectsUserControllerTest {
                 .build();
     }
 
+    public static User correctUser3() {
+        return User.builder()
+                .email("888@yandex.ru")
+                .login("Roman888")
+                .name("Romario")
+                .birthday(java.sql.Date.valueOf(LocalDate.of(2000, 1, 1)))
+                .build();
+    }
+
     public static User uncorrectMail() {
         return User.builder()
                 .email("777yandex.ru")
@@ -62,6 +71,7 @@ public class ObjectsUserControllerTest {
                 .birthday(java.sql.Date.valueOf(LocalDate.of(1988, 9, 2)))
                 .build();
     }
+
 
     public static User uncorrectBirthdayDate() {
         return User.builder()
