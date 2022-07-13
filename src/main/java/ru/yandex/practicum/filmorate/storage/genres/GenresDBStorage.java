@@ -24,7 +24,7 @@ public class GenresDBStorage implements GenresStorage{
         if(film.getGenres() != null) {
             removeDuplicate(film);
             for (FilmGenres genres : film.getGenres()) {
-                String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?) ";
+                String sqlQuery = "insert into FILM_GENRES (FILM_ID, GENRE_ID) values (?, ?)";
                 jdbcTemplate.update(sqlQuery
                         , film.getId()
                         , genres.getId());

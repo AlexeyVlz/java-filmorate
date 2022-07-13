@@ -28,9 +28,9 @@ public class GenresStorageApplicationTests {
     @Test
     public void addAndGetTest() {
         Film film = ObjectsFilmControllerTest.CorrectFilmWithGenres();
-        genresDBStorage.addGenres(filmDBStorage.add(film));
+        filmDBStorage.add(film);
         Assertions.assertEquals(new ArrayList<>(Arrays.asList(
                             new FilmGenres(2, "Драма"),
-                            new FilmGenres(5, "Боевик"))), genresDBStorage.getFilmGenres(1));
+                            new FilmGenres(6, "Боевик"))), genresDBStorage.getFilmGenres(1));
     }
 }

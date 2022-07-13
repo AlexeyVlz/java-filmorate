@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.objectsForTests;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmGenres;
 import ru.yandex.practicum.filmorate.model.FilmMpa;
 
 import java.time.LocalDate;
@@ -49,7 +50,8 @@ public class ObjectsFilmControllerTest {
                 .releaseDate(java.sql.Date.valueOf(LocalDate.of(1997, 10, 13)))
                 .duration(118)
                 .mpa(new FilmMpa(1, "G"))
-                .genres(new ArrayList<>(List.of(2, 5)))
+                .genres(new ArrayList<>(List.of(new FilmGenres(2, "Драма"),
+                        new FilmGenres(6, "Боевик"))))
                 .build();
     }
 

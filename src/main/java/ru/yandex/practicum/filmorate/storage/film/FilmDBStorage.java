@@ -41,8 +41,9 @@ public class FilmDBStorage implements FilmStorage{
             return stmt;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
-        genresStorage.addGenres(film);
-
+        if(film.getGenres() != null) {
+            genresStorage.addGenres(film);
+        }
         return film;
     }
 
