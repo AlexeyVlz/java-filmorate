@@ -45,7 +45,6 @@ public class FilmController {
             log.info("Новый фильм успешно добавлен");
             return film;
         } catch (ValidationException exception) {
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
         }
     }
@@ -62,10 +61,8 @@ public class FilmController {
             log.info("Фильм успешно обновлен");
             return film1;
         } catch (ValidationException exception) {
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
         } catch (NullPointerException exception) {
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -84,7 +81,6 @@ public class FilmController {
             }
             return filmService.getFilmById(id);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
 
@@ -96,7 +92,6 @@ public class FilmController {
         try {
             filmService.addLike(id, userId);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -110,7 +105,6 @@ public class FilmController {
             }
             return filmService.removeLike(id, userId);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -131,7 +125,6 @@ public class FilmController {
         try{
             return filmService.removeFilmById(id);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }

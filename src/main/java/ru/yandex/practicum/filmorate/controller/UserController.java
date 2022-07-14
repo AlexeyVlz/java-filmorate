@@ -47,10 +47,8 @@ public class UserController {
             log.info("Новый пользователь успешно добавлен");
             return user;
         } catch (ValidationException exception) {
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -70,10 +68,8 @@ public class UserController {
             log.info("Пользователь успешно обновлён");
             return user1;
         } catch (ValidationException exception) {
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new ValidationException(exception.getMessage());
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -92,7 +88,6 @@ public class UserController {
             }
             return userService.getUserById(id);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -106,7 +101,6 @@ public class UserController {
         try{
             userService.addNewFriend(id, friendId);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -117,7 +111,6 @@ public class UserController {
         try{
             return userService.deletingFriend(id, friendId);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -128,7 +121,6 @@ public class UserController {
         try{
             return userService.mutualFriendsList(id, otherId);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -139,7 +131,6 @@ public class UserController {
         try{
             return userService.getUserFriends(id);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
@@ -149,7 +140,6 @@ public class UserController {
         try{
             return userService.removeUserById(id);
         } catch (NullPointerException exception){
-            log.info("Возникла ошибка: " + exception.getMessage());
             throw new NullPointerException(exception.getMessage());
         }
     }
