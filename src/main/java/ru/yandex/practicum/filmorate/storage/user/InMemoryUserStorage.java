@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
 
-@Component
+/*@Component
 public class InMemoryUserStorage implements UserStorage{
 
     private final Map<Integer, User> users;
@@ -60,4 +60,4 @@ public class InMemoryUserStorage implements UserStorage{
         }
         users.remove(id);
     }
-}
+}*/

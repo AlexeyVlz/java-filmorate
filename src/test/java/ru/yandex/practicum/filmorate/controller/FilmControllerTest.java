@@ -3,13 +3,18 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.objectsForTests.ObjectsFilmControllerTest;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmDBStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.genres.GenresDBStorage;
+import ru.yandex.practicum.filmorate.storage.genres.GenresStorage;
+import ru.yandex.practicum.filmorate.storage.likes.LikesDbStorage;
+import ru.yandex.practicum.filmorate.storage.mostPopularFilms.MostPopularFilmsDbStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,20 +25,14 @@ public class FilmControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
+        filmController = new FilmController(new FilmService(new FilmDBStorage(new JdbcTemplate(),
+                new GenresDBStorage(new JdbcTemplate())),
+                new LikesDbStorage(new JdbcTemplate()), new MostPopularFilmsDbStorage(new JdbcTemplate()),
+                        new GenresDBStorage(new JdbcTemplate()), new MpaDbStorage(new JdbcTemplate())));
     }
 
     @Test
     public void addTest() {
-        Film film = ObjectsFilmControllerTest.addCorrectFilm();
-        try {
-            filmController.add(film);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-        InMemoryFilmStorage filmStorage = (InMemoryFilmStorage) filmController.getFilmService().getFilmStorage();
-        Assertions.assertEquals(film, filmStorage.getFilms().get(1));
-
         Film emptyName = ObjectsFilmControllerTest.addEmptyNameFilm();
         try {
             filmController.add(emptyName);
@@ -65,30 +64,6 @@ public class FilmControllerTest {
 
     @Test
     public void updateTest() {
-        Film film = ObjectsFilmControllerTest.addCorrectFilm();
-        try {
-            filmController.add(film);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-
-        Film uncorrectIdByUpdate = ObjectsFilmControllerTest.uncorrectIdByUpdate();
-        uncorrectIdByUpdate.setId(1);
-        try {
-            filmController.update(uncorrectIdByUpdate);
-        } catch (ValidationException e) {
-            Assertions.assertEquals(e.getMessage(), "Такой фильм ранее не включался в рейтинг");
-        }
-
-        Film correctIdByUpdate = ObjectsFilmControllerTest.correctIdByUpdate();
-        try {
-            filmController.update(correctIdByUpdate);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-        InMemoryFilmStorage filmStorage = (InMemoryFilmStorage) filmController.getFilmService().getFilmStorage();
-        Assertions.assertEquals(correctIdByUpdate, filmStorage.getFilms().get(1));
-
         Film emptyName = ObjectsFilmControllerTest.addEmptyNameFilm();
         emptyName.setId(1);
         try {
@@ -122,22 +97,5 @@ public class FilmControllerTest {
         }
     }
 
-    @Test
-    public void getFilmsTest() {
-        List<Film> films = new ArrayList<>();
-        Assertions.assertEquals(films, filmController.getAllFilms());
-        Film film1 = ObjectsFilmControllerTest.addCorrectFilm();
-        film1.setId(1);
-        films.add(film1);
-        Film film2 = ObjectsFilmControllerTest.addCorrectFilm2();
-        film2.setId(2);
-        films.add(film2);
-        try {
-            filmController.add(ObjectsFilmControllerTest.addCorrectFilm());
-            filmController.add(ObjectsFilmControllerTest.addCorrectFilm2());
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-        Assertions.assertEquals(films, filmController.getAllFilms());
-    }
+
 }

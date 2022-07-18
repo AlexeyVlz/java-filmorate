@@ -5,28 +5,25 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.validation.constraints.NotBlank;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.TreeSet;
+import java.sql.Date;
+import java.util.List;
 
-import javax.validation.*;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Data
 @Builder(toBuilder = true)
 public class Film {
-
     private int id;
     @NonNull @NotBlank
     private final String name;
     @NonNull @NotBlank @Size(min = 1, max = 200)
     private final String description;
     @NonNull
-    private final LocalDate releaseDate;
-    @NonNull
+    private final Date releaseDate;
+    @NonNull @Positive
     private final int duration;
-    @Builder.Default
-    private final Set<Integer> likes = new TreeSet<>();
+    @NonNull
+    private final FilmMpa mpa;
+    private List<FilmGenres> genres;
 }

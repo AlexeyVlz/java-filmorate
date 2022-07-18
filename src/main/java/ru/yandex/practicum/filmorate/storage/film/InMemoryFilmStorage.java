@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 
-@Component
+/*@Component
 public class InMemoryFilmStorage implements FilmStorage{
 
     private final Map<Integer, Film> films;
@@ -54,4 +54,4 @@ public class InMemoryFilmStorage implements FilmStorage{
         }
         films.remove(id);
     }
-}
+}*/

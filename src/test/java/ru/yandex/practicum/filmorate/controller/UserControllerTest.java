@@ -3,16 +3,14 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.objectsForTests.ObjectsUserControllerTest;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.friends.FriendsDbSrorage;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserControllerTest {
 
@@ -20,20 +18,12 @@ public class UserControllerTest {
 
     @BeforeEach
     public void beforeEach() {
-        userController = new UserController(new UserService(new InMemoryUserStorage()));
+        userController = new UserController(new UserService(new UserDbStorage(new JdbcTemplate()),
+                new FriendsDbSrorage(new JdbcTemplate())));
     }
 
     @Test
     public void createTest() {
-        User user = ObjectsUserControllerTest.correctUser();
-        try {
-            userController.create(user);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-        InMemoryUserStorage userStorage = (InMemoryUserStorage) userController.getUserService().getUserStorage();
-        Assertions.assertEquals(user, userStorage.getUsers().get(1));
-
         User uncorrectMail = ObjectsUserControllerTest.uncorrectMail();
         try {
             userController.create(uncorrectMail);
@@ -68,42 +58,10 @@ public class UserControllerTest {
         } catch (ValidationException e) {
             Assertions.assertEquals(e.getMessage(), "Дата рождения не может быть позже текущего времени");
         }
-
-        User emptyName = ObjectsUserControllerTest.emptyName();
-        User userToCheck = User.builder()
-                .id(2)
-                .email("777@yandex.ru")
-                .login("Alexey777")
-                .name("Alexey777")
-                .birthday(LocalDate.of(1988, 9, 2))
-                .build();
-        try {
-            userController.create(emptyName);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-        Assertions.assertEquals(userToCheck, userStorage.getUsers().get(2));
     }
 
     @Test
     public void updateTest() {
-        User user = ObjectsUserControllerTest.correctUser();
-        User user2 = ObjectsUserControllerTest.correctUser2();
-        try {
-            userController.create(user);
-            userController.create(user2);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-
-        User uncorrectId = ObjectsUserControllerTest.correctUser();
-        uncorrectId.setId(111);
-        try{
-            userController.update(uncorrectId);
-        } catch (ValidationException e){
-            Assertions.assertEquals(e.getMessage(), "Пользователь не обнаружен");
-        }
-
         User uncorrectMail = ObjectsUserControllerTest.uncorrectMail();
         uncorrectMail.setId(1);
         try {
@@ -144,24 +102,4 @@ public class UserControllerTest {
             Assertions.assertEquals(e.getMessage(), "Дата рождения не может быть позже текущего времени");
         }
     }
-
-    @Test
-    public void getAllUsersRTest() {
-        User user = ObjectsUserControllerTest.correctUser();
-        User user2 = ObjectsUserControllerTest.correctUser2();
-        try {
-            userController.create(user);
-            userController.create(user2);
-        } catch (ValidationException e) {
-            System.out.println(e.getMessage());
-        }
-        List<User> usersList = new ArrayList<>();
-        user.setId(1);
-        usersList.add(user);
-        user2.setId(2);
-        usersList.add(user2);
-        Assertions.assertEquals(usersList, userController.getAllUsers());
-
-    }
-
 }

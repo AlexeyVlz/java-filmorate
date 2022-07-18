@@ -6,9 +6,9 @@ import lombok.NonNull;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.validation.constraints.Pattern;
 
@@ -19,11 +19,9 @@ public class User {
     private  int id;
     @NonNull @Email
     private  String email;
-    @NonNull @NotBlank /*@Pattern(regexp = "^/S*$")*/
-    private  String login;
     private  String name;
-    @NonNull
-    private LocalDate birthday;
-    @Builder.Default
-    private Set<Integer> friendsList = new TreeSet<>();
+    @NonNull @NotBlank
+    private  String login;
+    private Date birthday;
+
 }
